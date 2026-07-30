@@ -727,6 +727,15 @@ body.has-cursor .cursor-dot, body.has-cursor .cursor-ring { display: flex; }
   transition: transform 0.3s, border-color 0.3s;
 }
 .contact-card:hover { transform: translateY(-4px); border-color: var(--yellow); }
+/* Discord-карточка — это <button>: сбрасываем браузерные стили кнопки */
+button.contact-card {
+  color: var(--text);
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  text-align: left;
+  width: 100%;
+}
 .contact-icon {
   width: 44px; height: 44px;
   flex-shrink: 0;

@@ -48,15 +48,30 @@
     { x: 0.08, y: 0.6, r: 0.28, s: 0.00024, c: 3, a: 0.09, ph: 5.1 },
   ];
 
-  // Звёздочки
+  // Звёздочки-пылинки: медленно дрейфуют, как пыль в луче света
   const stars = [];
   for (let i = 0; i < 46; i++) {
-    stars.push({ x: Math.random(), y: Math.random(), r: Math.random() * 1.4 + 0.4, ph: Math.random() * 6.28, sp: 0.0004 + Math.random() * 0.0012 });
+    const depth = 0.35 + Math.random() * 0.65; // «глубина»: дальние — меньше и медленнее
+    const ang = Math.random() * 6.2832;
+    const speed = (0.004 + Math.random() * 0.01) * depth; // долей экрана в секунду
+    stars.push({
+      x: Math.random(), y: Math.random(),
+      vx: Math.cos(ang) * speed,
+      vy: Math.sin(ang) * speed * 0.7 - 0.003 * depth, // лёгкий подъём вверх, как у пылинок
+      r: (Math.random() * 1.3 + 0.4) * depth,
+      ph: Math.random() * 6.28,
+      sp: 0.0004 + Math.random() * 0.0012,
+      wob: 0.003 + Math.random() * 0.007, // амплитуда покачивания
+      depth,
+    });
   }
 
   let level = 0;
+  let lastT = 0;
 
   function frame(t) {
+    const dt = lastT ? Math.min((t - lastT) / 1000, 0.05) : 0.016;
+    lastT = t;
     const target = Nebula.getLevel() + Nebula.kick;
     Nebula.kick *= 0.92;
     level += (Math.min(target, 1) - level) * 0.14; // сглаживание пульса
@@ -88,13 +103,21 @@
       ctx.fill();
     }
 
-    // звёзды мерцают, чуть ярче под музыку
+    // пылинки: дрейф + покачивание + мерцание, чуть ярче под музыку
     ctx.globalCompositeOperation = 'source-over';
     for (const s of stars) {
+      s.x += s.vx * dt;
+      s.y += s.vy * dt;
+      if (s.x < -0.02) s.x += 1.04; else if (s.x > 1.02) s.x -= 1.04;
+      if (s.y < -0.02) s.y += 1.04; else if (s.y > 1.02) s.y -= 1.04;
+      const wx = Math.sin(t * 0.0003 + s.ph) * s.wob;
+      const wy = Math.cos(t * 0.00023 + s.ph * 1.7) * s.wob;
+      const px = (s.x + wx + (mouse.x - 0.5) * 0.02 * s.depth) * W;
+      const py = (s.y + wy + (mouse.y - 0.5) * 0.02 * s.depth) * H;
       const tw = 0.35 + 0.65 * Math.abs(Math.sin(t * s.sp + s.ph));
       ctx.fillStyle = 'rgba(243,239,255,' + (tw * (0.35 + level * 0.5)).toFixed(3) + ')';
       ctx.beginPath();
-      ctx.arc(s.x * W, s.y * H, s.r * scale * (1 + level * 0.6), 0, 6.2832);
+      ctx.arc(px, py, s.r * scale * (1 + level * 0.6), 0, 6.2832);
       ctx.fill();
     }
 

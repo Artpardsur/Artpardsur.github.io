@@ -14,7 +14,6 @@ SND = r"D:\Портфолио саунд-дизайнера"
 
 MUSIC = {
     "ch-welcome": r"Чернобыль Зона смерти\Добро пожаловать в Зону!.mp3",
-    "ch-keys": r"Чернобыль Зона смерти\Keys of Wanderlust.mp3",
     "gr-trailer": r"Грехопадение\Музыка для трейлера.mp3",
     "gr-memories": r"Грехопадение\Воспоминания.mp3",
     "gr-november": r"Грехопадение\Ноябрьское-утро.mp3",
@@ -40,7 +39,6 @@ MUSIC = {
     "al-taisiya": r"Альфа В мире животных\taisiya\taisiya2.ogg",
     "va-funny": r"Valonabang\funny_hh_jazz\funny_hh_jazz.mp3",
     "va-hhj1": r"Valonabang\hip_hop_jazz\hip_hop_jazz1.mp3",
-    "va-hhj2": r"Valonabang\hip_hop_jazz\hip_hop_jazz2.ogg",
     "va-lofi": r"Valonabang\lo-fi\simple_lo-fi.mp3",
     "va-lofihh": r"Valonabang\lo-fi_hip-hop\lo-fi_hip-hop.mp3",
     "va-dubstep": r"Valonabang\dubstep\dubstep3.mp3",
@@ -100,9 +98,6 @@ SFX = {
     "hgs-blanket": r"Визуальная новелла -Howl Growl-\HowlGrowlmaster\game\audio\blanket.mp3",
     "hgs-noise": r"Визуальная новелла -Howl Growl-\HowlGrowlmaster\game\audio\noise.mp3",
     "hgs-shine": r"Визуальная новелла -Howl Growl-\HowlGrowlmaster\game\audio\shine.mp3",
-    "el-attack": r"Визуальная новелла Elven Holes Must Fall\Звуки\before_attack.mp3",
-    "el-clothes": r"Визуальная новелла Elven Holes Must Fall\Звуки\clothes.mp3",
-    "el-dworf": r"Визуальная новелла Elven Holes Must Fall\Звуки\dworf1.wav",
     "als-jump": r"Визуальная новелла Альфа_ В мире животных\sounds\1_jump\jump (1).wav",
     "als-slide": r"Визуальная новелла Альфа_ В мире животных\sounds\2_slide\slide (1).wav",
     "als-fall": r"Визуальная новелла Альфа_ В мире животных\sounds\5_fall\fall1.wav",
@@ -157,6 +152,9 @@ def main():
 
     jobs = [(tid, os.path.join(COMP, rel), os.path.join(music_dir, tid + ".mp3")) for tid, rel in MUSIC.items()]
     jobs += [(sid, os.path.join(SND, rel), os.path.join(sfx_dir, sid + ".mp3")) for sid, rel in SFX.items()]
+    # трек для «Лабиринта грёз» лежит отдельно
+    jobs.append(("lab-glade", r"C:\Users\home\Desktop\The Glade of Reflections.mp3",
+                 os.path.join(music_dir, "lab-glade.mp3")))
 
     for tid, src, dst in jobs:
         if not os.path.exists(src):

@@ -176,6 +176,18 @@
       row.addEventListener('click', () => window.Player.play(tr));
       list.appendChild(row);
       const wave = row.querySelector('.track-wave');
+      // по волне играющего трека можно перематывать прямо из списка
+      const rowSeek = (e) => {
+        if (window.Player.current && window.Player.current.id === tr.id) {
+          e.stopPropagation();
+          if (e.type === 'pointerdown') {
+            const r = wave.getBoundingClientRect();
+            window.Player.seekFraction((e.clientX - r.left) / r.width);
+          }
+        }
+      };
+      wave.addEventListener('pointerdown', rowSeek);
+      wave.addEventListener('click', rowSeek);
       requestAnimationFrame(() => window.Player.drawStaticWave(wave, tr.id));
     });
   }

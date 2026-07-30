@@ -163,12 +163,15 @@
   btnNext.addEventListener('click', () => Player.step(1));
   volEl.addEventListener('input', () => { audio.volume = parseFloat(volEl.value); });
 
-  // Перемотка по волне
+  // Перемотка по волне (и из списка треков через Player.seekFraction)
+  Player.seekFraction = function (f) {
+    if (!audio.duration || !isFinite(audio.duration)) return;
+    audio.currentTime = Math.max(0, Math.min(1, f)) * audio.duration;
+  };
+
   function seek(e) {
-    if (!audio.duration) return;
     const r = waveCanvas.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width;
-    audio.currentTime = Math.max(0, Math.min(1, x)) * audio.duration;
+    Player.seekFraction((e.clientX - r.left) / r.width);
   }
   waveCanvas.addEventListener('pointerdown', (e) => {
     seek(e);

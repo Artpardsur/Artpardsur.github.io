@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Пардус — композитор, саунд-дизайнер, программист</title>
+  <meta name="description" content="Артём Лиджиев (Pardus) — композитор, саунд-дизайнер и программист. Музыка и звук для игр, визуальных новелл и анимации.">
+  <meta property="og:title" content="Pardus — composer · sound designer · developer">
+  <meta property="og:description" content="Музыка и звук для игр, визуальных новелл и анимации.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0714'/%3E%3Cpath d='M22 46V20h12a9 9 0 1 1 0 18h-6' fill='none' stroke='%23ffd60a' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='22' cy='46' r='4' fill='%238b5cf6'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Прелоадер: эквалайзер собирается в имя -->
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="preloader-eq" id="preloaderEq"></div>
+    <div class="preloader-name" id="preloaderName">PARDUS</div>
+  </div>
+
+  <!-- Кастомный курсор -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"><span id="cursorGlyph"></span></div>
+
+  <!-- Аудио-реактивная туманность -->
+  <canvas id="nebula" aria-hidden="true"></canvas>
+
+  <header class="site-header" id="siteHeader">
+    <a class="logo" href="#top" data-cursor="link">
+      <span class="logo-mark">₽</span><span class="logo-text">Pardus</span>
+    </a>
+    <nav class="site-nav" id="siteNav">
+      <a href="#about" data-i18n="nav.about" data-cursor="link">Обо мне</a>
+      <a href="#music" data-i18n="nav.music" data-cursor="link">Музыка</a>
+      <a href="#sound" data-i18n="nav.sound" data-cursor="link">Саунд-дизайн</a>
+      <a href="#projects" data-i18n="nav.projects" data-cursor="link">Проекты</a>
+      <a href="#code" data-i18n="nav.code" data-cursor="link">Код</a>
+      <a href="#contacts" data-i18n="nav.contacts" data-cursor="link">Контакты</a>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" id="langSwitch">
+        <button class="lang-current" id="langCurrent" data-cursor="link" aria-haspopup="listbox">RU</button>
+        <div class="lang-menu" id="langMenu" role="listbox"></div>
+      </div>
+      <button class="burger" id="burger" aria-label="Menu" data-cursor="link"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="hero">
+      <p class="hero-hello" data-i18n="hero.hello" data-anim="letters">Привет, я</p>
+      <h1 class="hero-name" data-anim="letters-stagger">
+        <span class="hero-name-real" data-i18n="hero.name">Артём Лиджиев</span>
+        <span class="hero-name-aka"><span data-i18n="hero.aka">он же</span> <b class="accent-yellow">Pardus</b></span>
+      </h1>
+      <div class="hero-roles">
+        <span class="hero-roles-static" data-i18n="hero.iam">Я — </span>
+        <span class="hero-role-rotator accent-violet" id="roleRotator"></span>
+      </div>
+      <p class="hero-tagline" data-i18n="hero.tagline">Пишу музыку и создаю звук для игр, визуальных новелл и анимации. И код — тоже пишу.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#music" data-i18n="hero.listen" data-cursor="link">Слушать музыку</a>
+        <a class="btn btn-ghost" href="#contacts" data-i18n="hero.contact" data-cursor="link">Связаться</a>
+      </div>
+      <div class="hero-scroll" aria-hidden="true"><span class="hero-scroll-dot"></span></div>
+    </section>
+
+    <!-- ============ ОБО МНЕ ============ -->
+    <section class="section" id="about">
+      <h2 class="section-title" data-i18n="about.title" data-anim="letters">Обо мне</h2>
+      <div class="about-grid">
+        <div class="about-text">
+          <p data-i18n="about.p1" data-anim="fade"></p>
+          <p data-i18n="about.p2" data-anim="fade"></p>
+          <p data-i18n="about.p3" data-anim="fade"></p>
+        </div>
+        <div class="about-timeline" id="aboutTimeline"></div>
+      </div>
+    </section>
+
+    <!-- ============ МУЗЫКА ============ -->
+    <section class="section" id="music">
+      <h2 class="section-title" data-i18n="music.title" data-anim="letters">Музыка</h2>
+      <p class="section-sub" data-i18n="music.sub">Выбери жанр или настроение — и слушай именно то, что ищешь.</p>
+
+      <div class="filters">
+        <div class="filter-row" id="genreFilters"></div>
+        <div class="filter-row" id="moodFilters"></div>
+        <div class="filter-row filter-row-meta">
+          <select class="project-select" id="projectSelect" data-cursor="link"></select>
+          <button class="filter-clear" id="filterClear" data-i18n="music.clear" data-cursor="link">Сбросить</button>
+          <span class="track-count" id="trackCount"></span>
+        </div>
+      </div>
+
+      <div class="track-list" id="trackList"></div>
+    </section>
+
+    <!-- ============ САУНД-ДИЗАЙН ============ -->
+    <section class="section" id="sound">
+      <h2 class="section-title" data-i18n="sound.title" data-anim="letters">Саунд-дизайн</h2>
+      <p class="section-sub" data-i18n="sound.sub">Нажимай на пады — каждый звук сделан для реального проекта.</p>
+      <div class="sfx-groups" id="sfxGroups"></div>
+    </section>
+
+    <!-- ============ ПРОЕКТЫ ============ -->
+    <section class="section" id="projects">
+      <h2 class="section-title" data-i18n="projects.title" data-anim="letters">Проекты</h2>
+      <p class="section-sub" data-i18n="projects.sub">Игры, визуальные новеллы и анимация, над которыми я работал.</p>
+      <div class="projects-grid" id="projectsGrid"></div>
+    </section>
+
+    <!-- ============ КОД ============ -->
+    <section class="section" id="code">
+      <h2 class="section-title" data-i18n="code.title" data-anim="letters">Программирование</h2>
+      <div class="code-grid">
+        <div class="code-text">
+          <p data-i18n="code.p1" data-anim="fade"></p>
+          <p data-i18n="code.p2" data-anim="fade"></p>
+        </div>
+        <div class="code-soon" data-anim="fade">
+          <div class="code-soon-badge" data-i18n="code.soonBadge">Скоро</div>
+          <p data-i18n="code.soon">Здесь появятся мои личные проекты — они уже в разработке.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ КОНТАКТЫ ============ -->
+    <section class="section" id="contacts">
+      <h2 class="section-title" data-i18n="contacts.title" data-anim="letters">Контакты</h2>
+      <p class="section-sub" data-i18n="contacts.sub">Открыт для заказов и сотрудничества.</p>
+      <div class="contacts-grid" id="contactsGrid"></div>
+    </section>
+  </main>
+
+  <!-- ============ ПЛЕЕР ============ -->
+  <div class="player" id="player" aria-hidden="true">
+    <button class="player-btn" id="playerPrev" data-cursor="link" aria-label="Previous">⏮</button>
+    <button class="player-btn player-btn-main" id="playerToggle" data-cursor="link" aria-label="Play/Pause">▶</button>
+    <button class="player-btn" id="playerNext" data-cursor="link" aria-label="Next">⏭</button>
+    <div class="player-info">
+      <div class="player-title" id="playerTitle"></div>
+      <div class="player-project" id="playerProject"></div>
+    </div>
+    <canvas class="player-wave" id="playerWave" data-cursor="link"></canvas>
+    <div class="player-time" id="playerTime">0:00</div>
+    <input class="player-volume" id="playerVolume" type="range" min="0" max="1" step="0.01" value="0.9" data-cursor="link" aria-label="Volume">
+  </div>
+  <audio id="audioEl" preload="none"></audio>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <div class="footer-name">Артём Лиджиев · Pardus</div>
+        <div class="footer-copy" id="footerCopy"></div>
+      </div>
+      <!-- Пасхалка: мини-пианино -->
+      <div class="footer-piano-wrap">
+        <button class="piano-toggle" id="pianoToggle" title="♪" data-cursor="link">♪</button>
+        <div class="piano" id="piano" aria-hidden="true"></div>
+        <div class="piano-hint" id="pianoHint" data-i18n="piano.hint">Можно играть мышкой или клавишами A–K</div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="data/i18n.js"></script>
+  <script src="data/content.js"></script>
+  <script src="data/peaks.js"></script>
+  <script src="js/nebula.js"></script>
+  <script src="js/cursor.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/extras.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

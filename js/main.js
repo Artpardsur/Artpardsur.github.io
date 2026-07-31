@@ -137,7 +137,13 @@
 
   function renderTracks() {
     const list = document.getElementById('trackList');
-    const tracks = filteredTracks();
+    let tracks = filteredTracks();
+
+    // если у треков проставлены годы — группируем по ним (новые сверху)
+    const hasYears = tracks.some((tr) => tr.year);
+    if (hasYears) {
+      tracks = tracks.slice().sort((a, b) => (b.year || 0) - (a.year || 0));
+    }
     window.Player.queue = tracks;
     list.innerHTML = '';
 
@@ -151,7 +157,18 @@
       return;
     }
 
+    let lastYear = null;
     tracks.forEach((tr, i) => {
+      if (hasYears) {
+        const y = tr.year ? String(tr.year) : t('music.yearOther');
+        if (y !== lastYear) {
+          lastYear = y;
+          const div = document.createElement('div');
+          div.className = 'track-year';
+          div.textContent = y;
+          list.appendChild(div);
+        }
+      }
       const proj = C.projects.find((p) => p.id === tr.project);
       const row = document.createElement('div');
       row.className = 'track';
@@ -162,7 +179,7 @@
       }
 
       const tags = [
-        '<span class="track-tag tag-project">' + (proj ? loc(proj.name) : '') + '</span>',
+        ...(proj ? ['<span class="track-tag tag-project">' + loc(proj.name) + '</span>'] : []),
         ...tr.genres.map((g) => '<span class="track-tag">' + t('genre.' + g) + '</span>'),
       ].join('');
 
@@ -221,18 +238,30 @@
         pad.innerHTML = '<span class="sfx-pad-icon">' + item.icon + '</span>' +
           '<span class="sfx-pad-name">' + loc(item.name) + '</span>' +
           '<span class="sfx-pad-bar"></span>';
+        let cur = null; // играющий сейчас экземпляр этого пада
         pad.addEventListener('click', () => {
+          // повторное нажатие — остановить звук
+          if (cur && !cur.paused && !cur.ended) {
+            cur.pause();
+            cur = null;
+            pad.classList.remove('playing');
+            return;
+          }
           const a = new Audio(item.file);
+          cur = a;
           a.volume = 0.9;
           a.play().catch(() => {});
           window.Nebula.kick = 0.35;
           pad.classList.remove('playing');
           void pad.offsetWidth; // перезапуск анимации
           a.addEventListener('loadedmetadata', () => {
+            if (cur !== a) return;
             pad.style.setProperty('--dur', Math.min(a.duration, 6) + 's');
             pad.classList.add('playing');
           });
-          a.addEventListener('ended', () => pad.classList.remove('playing'));
+          a.addEventListener('ended', () => {
+            if (cur === a) { cur = null; pad.classList.remove('playing'); }
+          });
         });
         pads.appendChild(pad);
       });

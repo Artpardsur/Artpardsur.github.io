@@ -92,7 +92,8 @@ window.CONTENT = {
       name: { ru: 'Paraselene', en: 'Paraselene' },
       type: 'vn',
       roles: ['composer', 'sound', 'dev'],
-      videoSoon: true,
+      media: 'media/paraselene.jpg',
+      mediaContain: true,
       desc: {
         ru: 'Отоме-новелла Ladno Team на стыке исекая, фэнтези и детектива: попавшей в иной мир героине придётся найти дорогу домой, попутно ввязавшись в необычное приключение. Пять романтических линий и тщательно выстроенный мир Аквамариса не дадут вам заскучать. И надеюсь, что мои участки программного кода не будут сбоить, а моя звукорежиссура с музыкой вам понравятся!',
         en: 'An otome novel by Ladno Team at the crossroads of isekai, fantasy and mystery: a heroine cast into another world must find her way home, getting tangled up in an unusual adventure along the way. Five romance routes and the carefully built world of Aquamaris will keep you hooked. And I hope my parts of the code never glitch — and that you enjoy my sound work and music!',

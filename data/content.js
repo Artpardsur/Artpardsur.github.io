@@ -15,6 +15,8 @@ window.CONTENT = {
   projects: [
     {
       id: 'chernobyl',
+      media: 'media/chernobyl.jpg',
+      mediaContain: true,
       name: { ru: 'Чернобыль: Зона смерти', en: 'Chernobyl: Death Zone' },
       type: 'release',
       roles: ['composer', 'sound'],
@@ -40,6 +42,7 @@ window.CONTENT = {
     },
     {
       id: 'grekhopadenie',
+      media: 'media/grekhopadenie.jpg',
       name: { ru: 'Грехопадение', en: 'Grekhopadenie' },
       type: 'vn',
       roles: ['composer', 'sound'],
@@ -108,6 +111,8 @@ window.CONTENT = {
     },
     {
       id: 'labyrinth',
+      media: 'media/labyrinth.jpg',
+      mediaContain: true,
       name: { ru: 'Лабиринт грёз', en: 'The Labyrinth of Dreams' },
       type: 'vn',
       roles: ['composer'],
@@ -131,6 +136,7 @@ window.CONTENT = {
     },
     {
       id: 'alpha',
+      media: 'media/alpha.jpg',
       name: { ru: 'Альфа: В мире животных', en: 'Alpha: In the World of Animals' },
       type: 'vn',
       roles: ['composer', 'sound'],
@@ -152,6 +158,7 @@ window.CONTENT = {
     },
     {
       id: 'valonabang',
+      media: 'media/valonabang.jpg',
       name: { ru: 'Valonabang', en: 'Valonabang' },
       type: 'vn',
       roles: ['composer'],
@@ -173,6 +180,7 @@ window.CONTENT = {
     },
     {
       id: 'god',
+      media: 'media/god.jpg',
       name: { ru: 'С нами G.O.D.', en: 'G.O.D. With Us' },
       type: 'vn',
       roles: ['sound'],
@@ -191,6 +199,7 @@ window.CONTENT = {
     },
     {
       id: 'at11pm',
+      media: 'media/at11pm.jpg',
       name: { ru: 'at 11 p.m', en: 'at 11 p.m' },
       type: 'vn',
       roles: ['sound'],
@@ -212,6 +221,7 @@ window.CONTENT = {
     },
     {
       id: 'les',
+      media: 'media/les.jpg',
       name: { ru: 'Лес помнит имена', en: 'The Forest Remembers Names' },
       type: 'game',
       roles: ['composer'],
@@ -230,6 +240,7 @@ window.CONTENT = {
     },
     {
       id: 'zaoblachny',
+      media: 'media/zaoblachny.jpg',
       name: { ru: 'Заоблачный мир', en: 'Zaoblachny Mir' },
       type: 'series',
       roles: ['composer'],
@@ -251,6 +262,7 @@ window.CONTENT = {
     },
     {
       id: 'hell-empire',
+      media: 'media/hell-empire.jpg',
       name: { ru: 'Империя Хэлл', en: 'Hell Empire' },
       type: 'series',
       roles: ['composer'],

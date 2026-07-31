@@ -640,6 +640,21 @@ body.has-cursor .cursor-dot, body.has-cursor .cursor-ring { display: flex; }
   transition: transform 0.6s ease;
 }
 .project-card:hover .project-media { transform: scale(1.04); }
+/* картинки с нестандартными пропорциями: целиком поверх размытой себя же */
+.pm-blur {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(18px) saturate(1.15);
+  opacity: 0.5;
+  transform: scale(1.15);
+}
+.project-media.pm-contain {
+  position: relative;
+  object-fit: contain;
+  padding: 6px 0;
+}
 .project-media-wrap::after {
   content: '';
   position: absolute;

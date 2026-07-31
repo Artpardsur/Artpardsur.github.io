@@ -281,13 +281,20 @@
       const links = (p.links || []).map((l) =>
         '<a class="project-link" href="' + l.url + '" target="_blank" rel="noopener" data-cursor="link">' + l.label + '</a>'
       ).join('');
-      // видео проекта или эстетичная заглушка «видео скоро»
-      const media = p.media
-        ? '<div class="project-media-wrap"><video class="project-media" src="' + p.media +
-          '" autoplay muted loop playsinline disablepictureinpicture></video></div>'
-        : (p.videoSoon
-          ? '<div class="project-media-wrap project-media-soon"><span class="pm-icon">🎬</span><span>' + t('projects.videoSoon') + '</span></div>'
-          : '');
+      // медиа проекта: видео, картинка (для нестандартных пропорций —
+      // с размытым фоном из неё же) или заглушка «видео скоро»
+      let media = '';
+      if (p.media && p.media.endsWith('.mp4')) {
+        media = '<div class="project-media-wrap"><video class="project-media" src="' + p.media +
+          '" autoplay muted loop playsinline disablepictureinpicture></video></div>';
+      } else if (p.media) {
+        media = '<div class="project-media-wrap">' +
+          (p.mediaContain ? '<div class="pm-blur" style="background-image:url(\'' + p.media + '\')"></div>' : '') +
+          '<img class="project-media' + (p.mediaContain ? ' pm-contain' : '') + '" src="' + p.media + '" alt="" loading="lazy">' +
+          '</div>';
+      } else if (p.videoSoon) {
+        media = '<div class="project-media-wrap project-media-soon"><span class="pm-icon">🎬</span><span>' + t('projects.videoSoon') + '</span></div>';
+      }
       card.innerHTML = media +
         '<div class="project-head"><div class="project-name">' + loc(p.name) + '</div>' +
         '<span class="project-type">' + t('ptype.' + p.type) + '</span></div>' +

@@ -346,6 +346,8 @@ body.has-cursor .cursor-dot, body.has-cursor .cursor-ring { display: flex; }
 .section-sub { color: var(--muted); max-width: 640px; margin-bottom: 40px; }
 
 /* Появление букв заголовков */
+/* слово — неразрывный блок, переносы только между словами */
+[data-anim="letters"] .word, [data-anim="letters-stagger"] .word { display: inline-block; white-space: nowrap; }
 [data-anim="letters"] .ltr, [data-anim="letters-stagger"] .ltr {
   display: inline-block;
   opacity: 0;
@@ -851,6 +853,8 @@ button.contact-card {
   border-radius: 0 0 6px 6px;
   position: relative;
   transition: background 0.08s;
+  touch-action: manipulation; /* тап без задержки и без зума на мобильных */
+  -webkit-tap-highlight-color: transparent;
 }
 .piano-key:active, .piano-key.pressed { background: linear-gradient(to bottom, var(--yellow-soft), var(--yellow)); }
 .piano-key .key-hint {
@@ -949,6 +953,10 @@ button.contact-card {
   .sfx-pads { grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); gap: 10px; }
   .projects-grid .project-card { flex-basis: 100%; max-width: none; }
   .project-card { padding: 20px; }
+  /* имя в hero: «Артём» и «Лиджиев» отдельными строками */
+  .hero-name-real .word { display: block; }
+  /* «Программирование» должно помещаться в одну строку */
+  .section-title { font-size: clamp(22px, 7.6vw, 28px); }
   .contacts-grid { grid-template-columns: 1fr; }
 
   /* Плеер в две строки: сверху название, снизу управление и волна */

@@ -47,14 +47,22 @@
     const text = el.textContent;
     el.textContent = '';
     let i = 0;
-    for (const ch of text) {
-      const s = document.createElement('span');
-      s.className = 'ltr';
-      s.textContent = ch === ' ' ? ' ' : ch;
-      s.style.animationDelay = (i * 0.028) + 's';
-      el.appendChild(s);
-      i++;
-    }
+    const words = text.split(' ').filter(Boolean);
+    words.forEach((word, wi) => {
+      // слово — неразрывный блок: перенос возможен только между словами
+      const w = document.createElement('span');
+      w.className = 'word';
+      for (const ch of word) {
+        const s = document.createElement('span');
+        s.className = 'ltr';
+        s.textContent = ch;
+        s.style.animationDelay = (i * 0.028) + 's';
+        w.appendChild(s);
+        i++;
+      }
+      el.appendChild(w);
+      if (wi < words.length - 1) { el.appendChild(document.createTextNode(' ')); i++; }
+    });
   };
 
   const io = new IntersectionObserver((entries) => {
@@ -139,36 +147,58 @@
     el.addEventListener('pointerdown', start);
   });
 
+  // На мобильных AudioContext рождается «спящим» и просыпается асинхронно —
+  // ноту нужно планировать только ПОСЛЕ resume(), иначе будет тишина.
+  function ensureAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') {
+      const p = audioCtx.resume();
+      try { // iOS дополнительно требует «толкнуть» контекст пустым буфером
+        const b = audioCtx.createBufferSource();
+        b.buffer = audioCtx.createBuffer(1, 1, 22050);
+        b.connect(audioCtx.destination);
+        b.start(0);
+      } catch (e) { /* не критично */ }
+      return (p && p.then) ? p : Promise.resolve();
+    }
+    return Promise.resolve();
+  }
+
   function playNote(semi, el) {
-    try {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const f = 261.63 * Math.pow(2, semi / 12); // от C4
-      const t0 = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const osc2 = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'triangle';
-      osc2.type = 'sine';
-      osc.frequency.value = f;
-      osc2.frequency.value = f * 2;
-      gain.gain.setValueAtTime(0, t0);
-      gain.gain.linearRampToValueAtTime(0.22, t0 + 0.01);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.4);
-      const g2 = audioCtx.createGain();
-      g2.gain.value = 0.06;
-      osc.connect(gain);
-      osc2.connect(g2).connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(t0); osc2.start(t0);
-      osc.stop(t0 + 1.5); osc2.stop(t0 + 1.5);
-      window.Nebula.kick = 0.5;
-    } catch (e) { /* нет Web Audio — молчим */ }
-    if (el) {
+    if (el) { // визуальный отклик мгновенно, не дожидаясь звука
       el.classList.add('pressed');
       setTimeout(() => el.classList.remove('pressed'), 180);
     }
+    try {
+      ensureAudio().then(() => {
+        const f = 261.63 * Math.pow(2, semi / 12); // от C4
+        const t0 = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc2.type = 'sine';
+        osc.frequency.value = f;
+        osc2.frequency.value = f * 2;
+        gain.gain.setValueAtTime(0, t0);
+        gain.gain.linearRampToValueAtTime(0.22, t0 + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.4);
+        const g2 = audioCtx.createGain();
+        g2.gain.value = 0.06;
+        osc.connect(gain);
+        osc2.connect(g2).connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(t0); osc2.start(t0);
+        osc.stop(t0 + 1.5); osc2.stop(t0 + 1.5);
+        window.Nebula.kick = 0.5;
+      }).catch(() => { /* молчим */ });
+    } catch (e) { /* нет Web Audio — молчим */ }
   }
+
+  // Разбудить аудио при самом первом касании экрана (важно для iOS)
+  addEventListener('touchend', function unlockOnce() {
+    try { ensureAudio(); } catch (e) { /* нет Web Audio */ }
+  }, { once: true, passive: true });
 
   pianoToggle.addEventListener('click', () => {
     piano.classList.toggle('open');

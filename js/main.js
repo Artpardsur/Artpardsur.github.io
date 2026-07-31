@@ -281,7 +281,14 @@
       const links = (p.links || []).map((l) =>
         '<a class="project-link" href="' + l.url + '" target="_blank" rel="noopener" data-cursor="link">' + l.label + '</a>'
       ).join('');
-      card.innerHTML =
+      // видео проекта или эстетичная заглушка «видео скоро»
+      const media = p.media
+        ? '<div class="project-media-wrap"><video class="project-media" src="' + p.media +
+          '" autoplay muted loop playsinline disablepictureinpicture></video></div>'
+        : (p.videoSoon
+          ? '<div class="project-media-wrap project-media-soon"><span class="pm-icon">🎬</span><span>' + t('projects.videoSoon') + '</span></div>'
+          : '');
+      card.innerHTML = media +
         '<div class="project-head"><div class="project-name">' + loc(p.name) + '</div>' +
         '<span class="project-type">' + t('ptype.' + p.type) + '</span></div>' +
         '<div class="project-roles">' + roles + '</div>' +

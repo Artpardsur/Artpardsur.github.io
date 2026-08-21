@@ -1,15 +1,20 @@
 /* ============================================================
-   ДАННЫЕ САЙТА. Этот файл можно смело править руками:
+   ДАННЫЕ САЙТА. Файл можно править руками или через локальный
+   редактор:  python tools/admin.py  →  http://localhost:8138/admin/
    — треки: title (названия), genres (жанры), moods (настроения)
-   — проекты: desc (описания), links (ссылки)
-   — контакты: добавляй новые соцсети по образцу
+   — проекты: desc (описания), links (ссылки), media (картинка/видео)
    Жанры: orchestral, ambient, dark, electronic, lofi, jazz, rock
    Настроения: calm, sad, happy, tense, epic, cozy
    ============================================================ */
+
 window.CONTENT = {
 
   genres: ['orchestral', 'ambient', 'dark', 'electronic', 'lofi', 'jazz', 'rock'],
   moods: ['calm', 'sad', 'happy', 'tense', 'epic', 'cozy'],
+
+  /* Цифры для блока статистики. 0 — посчитать по спискам ниже,
+     иначе показывается это число (звуков сделано больше, чем выложено). */
+  stats: { projects: 0, tracks: 0, sounds: 375 },
 
   /* ---------------- ПРОЕКТЫ ---------------- */
   projects: [
@@ -17,6 +22,7 @@ window.CONTENT = {
       id: 'chernobyl',
       media: 'media/chernobyl.jpg',
       mediaContain: true,
+      cover: 'media/chernobyl.jpg',
       name: { ru: 'Чернобыль: Зона смерти', en: 'Chernobyl: Death Zone' },
       type: 'release',
       roles: ['composer', 'sound'],
@@ -43,6 +49,7 @@ window.CONTENT = {
     {
       id: 'grekhopadenie',
       media: 'media/grekhopadenie.jpg',
+      cover: 'media/grekhopadenie.jpg',
       name: { ru: 'Грехопадение', en: 'Grekhopadenie' },
       type: 'vn',
       roles: ['composer', 'sound'],
@@ -64,10 +71,11 @@ window.CONTENT = {
     },
     {
       id: 'howl-growl',
+      media: 'media/howl-growl.mp4',
+      cover: 'media/howl-growl.mp4',
       name: { ru: 'Howl Growl', en: 'Howl Growl' },
       type: 'vn',
       roles: ['composer', 'sound', 'dev'],
-      media: 'media/howl-growl.mp4',
       desc: {
         ru: 'Гибридная визуальная новелла инди-студии Dust Game Studio — амбициозный проект в декорациях России 90-х годов. Для его гнетущей зимней атмосферы я написал музыку и звуковое оформление, а ещё помогал команде как ассистент в разработке.',
         en: 'A hybrid visual novel by indie studio Dust Game Studio — an ambitious project set in 1990s Russia. For its oppressive wintry atmosphere I wrote the music and sound design, and I also helped the team as a development assistant.',
@@ -89,11 +97,12 @@ window.CONTENT = {
     },
     {
       id: 'paraselene',
+      media: 'media/paraselene.jpg',
+      mediaContain: true,
+      cover: 'media/paraselene.jpg',
       name: { ru: 'Paraselene', en: 'Paraselene' },
       type: 'vn',
       roles: ['composer', 'sound', 'dev'],
-      media: 'media/paraselene.jpg',
-      mediaContain: true,
       desc: {
         ru: 'Отоме-новелла Ladno Team на стыке исекая, фэнтези и детектива: попавшей в иной мир героине придётся найти дорогу домой, попутно ввязавшись в необычное приключение. Пять романтических линий и тщательно выстроенный мир Аквамариса не дадут вам заскучать. И надеюсь, что мои участки программного кода не будут сбоить, а моя звукорежиссура с музыкой вам понравятся!',
         en: 'An otome novel by Ladno Team at the crossroads of isekai, fantasy and mystery: a heroine cast into another world must find her way home, getting tangled up in an unusual adventure along the way. Five romance routes and the carefully built world of Aquamaris will keep you hooked. And I hope my parts of the code never glitch — and that you enjoy my sound work and music!',
@@ -114,6 +123,7 @@ window.CONTENT = {
       id: 'labyrinth',
       media: 'media/labyrinth.jpg',
       mediaContain: true,
+      cover: 'media/labyrinth.jpg',
       name: { ru: 'Лабиринт грёз', en: 'The Labyrinth of Dreams' },
       type: 'vn',
       roles: ['composer'],
@@ -138,6 +148,7 @@ window.CONTENT = {
     {
       id: 'alpha',
       media: 'media/alpha.jpg',
+      cover: 'media/alpha.jpg',
       name: { ru: 'Альфа: В мире животных', en: 'Alpha: In the World of Animals' },
       type: 'vn',
       roles: ['composer', 'sound'],
@@ -160,6 +171,7 @@ window.CONTENT = {
     {
       id: 'valonabang',
       media: 'media/valonabang.jpg',
+      cover: 'media/valonabang.jpg',
       name: { ru: 'Valonabang', en: 'Valonabang' },
       type: 'vn',
       roles: ['composer'],
@@ -182,6 +194,7 @@ window.CONTENT = {
     {
       id: 'god',
       media: 'media/god.jpg',
+      cover: 'media/god.jpg',
       name: { ru: 'С нами G.O.D.', en: 'G.O.D. With Us' },
       type: 'vn',
       roles: ['sound'],
@@ -196,11 +209,14 @@ window.CONTENT = {
         zh: '我为这部视觉小说构建了完整的城市声景：小巷与工地的嘈杂、人群、枪声、老式电脑的启动声。数百个声音汇聚成一个鲜活的世界。',
         ja: 'このビジュアルノベルのために、都市の音風景を丸ごと構築した。路地裏や工事現場のざわめき、群衆、銃声、古いPCの起動音。何百もの音が生きた世界を作り上げる。',
       },
-      links: [{ label: 'VK', url: 'https://vk.ru/bogwithus' }],
+      links: [
+        { label: 'VK', url: 'https://vk.ru/bogwithus' },
+      ],
     },
     {
       id: 'at11pm',
       media: 'media/at11pm.jpg',
+      cover: 'media/at11pm.jpg',
       name: { ru: 'at 11 p.m', en: 'at 11 p.m' },
       type: 'vn',
       roles: ['sound'],
@@ -223,6 +239,7 @@ window.CONTENT = {
     {
       id: 'les',
       media: 'media/les.jpg',
+      cover: 'media/les.jpg',
       name: { ru: 'Лес помнит имена', en: 'The Forest Remembers Names' },
       type: 'game',
       roles: ['composer'],
@@ -237,11 +254,14 @@ window.CONTENT = {
         zh: '在VK Play平台上的氛围向游戏。我的任务是让森林发出声音——于是诞生了寒冷而绵长的《The Darkest Winter》。',
         ja: 'VK Playで公開中のアトモスフェリックなゲーム。森を鳴らすことが私の仕事だった——そうして生まれたのが冷たく粘つくような「The Darkest Winter」。',
       },
-      links: [{ label: 'VK Play', url: 'https://vkplay.ru/play/game/les-pomnit-imena-47550/' }],
+      links: [
+        { label: 'VK Play', url: 'https://vkplay.ru/play/game/les-pomnit-imena-47550/' },
+      ],
     },
     {
       id: 'zaoblachny',
       media: 'media/zaoblachny.jpg',
+      cover: 'media/zaoblachny.jpg',
       name: { ru: 'Заоблачный мир', en: 'Zaoblachny Mir' },
       type: 'series',
       roles: ['composer'],
@@ -264,6 +284,7 @@ window.CONTENT = {
     {
       id: 'hell-empire',
       media: 'media/hell-empire.jpg',
+      cover: 'media/hell-empire.jpg',
       name: { ru: 'Империя Хэлл', en: 'Hell Empire' },
       type: 'series',
       roles: ['composer'],
@@ -278,10 +299,15 @@ window.CONTENT = {
         zh: 'BelMat工作室的独立动画剧集。我为其黑暗世界录制了吉他主题——带着过载失真、小调的嚎叫与十足的个性。',
         ja: 'BelMatスタジオのインディーアニメシリーズ。そのダークな世界のために、オーバードライブと短調の咆哮を効かせた、個性あるギターテーマを録音した。',
       },
-      links: [{ label: 'YouTube', url: 'https://www.youtube.com/@StudBelMat/videos' }],
+      links: [
+        { label: 'YouTube', url: 'https://www.youtube.com/@StudBelMat/videos' },
+      ],
     },
     {
       id: 'age-of-heroes',
+      media: 'media/age-of-heroes.jpg',
+      mediaContain: true,
+      cover: 'media/age-of-heroes.jpg',
       name: { ru: 'Age of Heroes', en: 'Age of Heroes' },
       type: 'remaster',
       roles: ['composer'],
@@ -305,6 +331,8 @@ window.CONTENT = {
     },
     {
       id: 'kwork',
+      media: 'media/kwork.jpg',
+      cover: 'media/kwork.jpg',
       name: { ru: 'Фриланс (Kwork)', en: 'Freelance (Kwork)' },
       type: 'freelance',
       roles: ['composer'],
@@ -323,6 +351,8 @@ window.CONTENT = {
     },
     {
       id: 'nightmares',
+      media: 'media/nightmares.jpg',
+      cover: 'media/nightmares.jpg',
       name: { ru: 'Этюды: Little Nightmares', en: 'Studies: Little Nightmares' },
       type: 'study',
       roles: ['composer'],
@@ -408,7 +438,7 @@ window.CONTENT = {
     { id: 'ln-3', project: 'nightmares', file: 'audio/music/ln-3.mp3', title: { ru: 'Кошмар III', en: 'Nightmare III' }, genres: ['dark', 'ambient'], moods: ['tense'] },
   ],
 
-  /* ---------------- ЗВУКИ (SFX-пады) ---------------- */
+  /* ---------------- ЗВУКИ ---------------- */
   sfx: [
     {
       project: 'god',

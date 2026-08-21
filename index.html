@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
   <!-- ?v= — версия для сброса кэша браузеров; увеличивать при правках CSS/JS -->
-  <link rel="stylesheet" href="css/style.css?v=2">
+  <link rel="stylesheet" href="css/style.css?v=3">
 </head>
 <body>
 
@@ -87,19 +87,95 @@
     <!-- ============ МУЗЫКА ============ -->
     <section class="section" id="music">
       <h2 class="section-title" data-i18n="music.title" data-anim="letters">Музыка</h2>
-      <p class="section-sub" data-i18n="music.sub">Выбери жанр или настроение — и слушай именно то, что ищешь.</p>
+      <p class="section-sub" data-i18n="music.sub">Один плеер — вся музыка. Выбери жанр, настроение или проект.</p>
 
-      <div class="filters">
-        <div class="filter-row" id="genreFilters"></div>
-        <div class="filter-row" id="moodFilters"></div>
-        <div class="filter-row filter-row-meta">
-          <select class="project-select" id="projectSelect" data-cursor="link"></select>
-          <button class="filter-clear" id="filterClear" data-i18n="music.clear" data-cursor="link">Сбросить</button>
-          <span class="track-count" id="trackCount"></span>
+      <!-- Анимированная статистика -->
+      <div class="stats" id="stats"></div>
+
+      <!-- ---------- Плеер ---------- -->
+      <div class="stage" id="stage">
+        <div class="stage-top">
+          <div class="stage-cover" id="stageCover">
+            <div class="stage-cover-blur" id="stageCoverBlur"></div>
+            <img class="stage-cover-img" id="stageCoverImg" alt="" hidden>
+            <video class="stage-cover-img" id="stageCoverVid" muted loop playsinline disablepictureinpicture hidden></video>
+            <span class="stage-cover-note">♪</span>
+            <span class="stage-eq" id="stageEq"><i></i><i></i><i></i><i></i></span>
+          </div>
+
+          <div class="stage-body">
+            <div class="stage-project" id="stageProject"></div>
+            <div class="stage-title" id="stageTitle">—</div>
+            <div class="stage-tags" id="stageTags"></div>
+
+            <canvas class="stage-wave" id="stageWave" data-cursor="link"></canvas>
+            <div class="stage-times">
+              <span id="stageCur">0:00</span>
+              <span id="stageTotal">0:00</span>
+            </div>
+
+            <div class="stage-controls">
+              <button class="sbtn sbtn-soft" id="stShuffle" data-cursor="link" aria-label="Shuffle">
+                <svg viewBox="0 0 24 24"><path d="M17 3.5 21 7l-4 3.5V8h-2.2c-1 0-1.6.4-2.3 1.3l-1 1.3-1.3-1.6.9-1.2C12.2 6.4 13.3 6 15 6H17V3.5ZM3 8h2.6c1.5 0 2.5.4 3.5 1.7l5 6.3c.7.9 1.2 1 2.1 1H19v-2.5L23 18l-4 3.5V19h-2.6c-1.6 0-2.6-.5-3.6-1.8l-5-6.2C7.1 10.1 6.6 10 5.7 10H3V8Z"/></svg>
+              </button>
+              <button class="sbtn" id="stPrev" data-cursor="link" aria-label="Previous">
+                <svg viewBox="0 0 24 24"><path d="M6 5h2.5v14H6zM20 5v14L9.5 12 20 5z"/></svg>
+              </button>
+              <button class="sbtn sbtn-main" id="stToggle" data-cursor="link" aria-label="Play/Pause">
+                <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <svg class="i-pause" viewBox="0 0 24 24"><path d="M7 5h3.4v14H7zM13.6 5H17v14h-3.4z"/></svg>
+              </button>
+              <button class="sbtn" id="stNext" data-cursor="link" aria-label="Next">
+                <svg viewBox="0 0 24 24"><path d="M15.5 5H18v14h-2.5zM4 5l10.5 7L4 19V5z"/></svg>
+              </button>
+              <button class="sbtn sbtn-soft" id="stRepeat" data-cursor="link" aria-label="Repeat">
+                <svg viewBox="0 0 24 24"><path d="M8.5 7H16V4.5L20.5 8 16 11.5V9H8.5C7.7 9 7 9.7 7 10.5V13H5v-2.5C5 8.6 6.6 7 8.5 7Zm7 10H8v2.5L3.5 16 8 12.5V15h7.5c.8 0 1.5-.7 1.5-1.5V11h2v2.5c0 1.9-1.6 3.5-3.5 3.5Z"/></svg>
+              </button>
+              <div class="stage-vol">
+                <button class="sbtn sbtn-soft" id="stMute" data-cursor="link" aria-label="Volume">
+                  <svg class="i-vol" viewBox="0 0 24 24"><path d="M4 9h3.5L12 5v14l-4.5-4H4V9Zm11.5-.6a5 5 0 0 1 0 7.2l-1.2-1.3a3.2 3.2 0 0 0 0-4.6l1.2-1.3Zm2.3-2.6a8.5 8.5 0 0 1 0 12.4l-1.2-1.3a6.7 6.7 0 0 0 0-9.8l1.2-1.3Z"/></svg>
+                  <svg class="i-mute" viewBox="0 0 24 24"><path d="M4 9h3.5L12 5v14l-4.5-4H4V9Zm11 1.6L16.4 9l1.6 1.6L19.6 9 21 10.4 19.4 12l1.6 1.6-1.4 1.4-1.6-1.6-1.6 1.6-1.4-1.4 1.6-1.6-1.6-1.4Z"/></svg>
+                </button>
+                <input class="stage-volume" id="stVolume" type="range" min="0" max="1" step="0.01" value="0.9" data-cursor="link" aria-label="Volume">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Кнопки-открывашки: жанр, настроение, проект, плейлист -->
+        <div class="stage-picks">
+          <button class="pick" id="pickGenre" data-cursor="link">
+            <span class="pick-cap" data-i18n="music.genreLabel">Жанр</span>
+            <span class="pick-val">—</span>
+            <svg class="pick-arr" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+          </button>
+          <button class="pick" id="pickMood" data-cursor="link">
+            <span class="pick-cap" data-i18n="music.moodLabel">Настроение</span>
+            <span class="pick-val">—</span>
+            <svg class="pick-arr" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+          </button>
+          <button class="pick" id="pickProject" data-cursor="link">
+            <span class="pick-cap" data-i18n="music.projectLabel">Проект</span>
+            <span class="pick-val">—</span>
+            <svg class="pick-arr" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+          </button>
+          <button class="pick pick-reset" id="pickReset" data-cursor="link" hidden>
+            <span data-i18n="music.clear">Сбросить</span>
+          </button>
+          <button class="pick pick-list" id="listToggle" data-cursor="link" aria-expanded="false">
+            <span class="pick-cap" data-i18n="music.playlist">Плейлист</span>
+            <span class="pick-val" id="listCount">0</span>
+            <svg class="pick-arr" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+          </button>
+        </div>
+
+        <!-- Выдвижной список композиций -->
+        <div class="drawer" id="drawer" aria-hidden="true">
+          <div class="drawer-inner">
+            <div class="track-list" id="trackList"></div>
+          </div>
         </div>
       </div>
-
-      <div class="track-list" id="trackList"></div>
     </section>
 
     <!-- ============ САУНД-ДИЗАЙН ============ -->
@@ -139,20 +215,41 @@
     </section>
   </main>
 
-  <!-- ============ ПЛЕЕР ============ -->
-  <div class="player" id="player" aria-hidden="true">
-    <button class="player-btn" id="playerPrev" data-cursor="link" aria-label="Previous">⏮</button>
-    <button class="player-btn player-btn-main" id="playerToggle" data-cursor="link" aria-label="Play/Pause">▶</button>
-    <button class="player-btn" id="playerNext" data-cursor="link" aria-label="Next">⏭</button>
-    <div class="player-info">
-      <div class="player-title" id="playerTitle"></div>
-      <div class="player-project" id="playerProject"></div>
+  <!-- ============ МИНИ-ПЛЕЕР (появляется, когда большой уехал за экран) ============ -->
+  <div class="minibar" id="minibar" aria-hidden="true">
+    <button class="minibar-cover" id="miniCover" data-cursor="link" aria-label="To player">
+      <img id="miniCoverImg" alt="" hidden>
+      <span class="minibar-cover-note">♪</span>
+    </button>
+    <button class="sbtn minibar-side" id="miniPrev" data-cursor="link" aria-label="Previous">
+      <svg viewBox="0 0 24 24"><path d="M6 5h2.5v14H6zM20 5v14L9.5 12 20 5z"/></svg>
+    </button>
+    <button class="sbtn sbtn-main minibar-toggle" id="miniToggle" data-cursor="link" aria-label="Play/Pause">
+      <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      <svg class="i-pause" viewBox="0 0 24 24"><path d="M7 5h3.4v14H7zM13.6 5H17v14h-3.4z"/></svg>
+    </button>
+    <button class="sbtn minibar-side" id="miniNext" data-cursor="link" aria-label="Next">
+      <svg viewBox="0 0 24 24"><path d="M15.5 5H18v14h-2.5zM4 5l10.5 7L4 19V5z"/></svg>
+    </button>
+    <div class="minibar-meta">
+      <div class="minibar-title" id="miniTitle"></div>
+      <div class="minibar-project" id="miniProject"></div>
     </div>
-    <canvas class="player-wave" id="playerWave" data-cursor="link"></canvas>
-    <div class="player-time" id="playerTime">0:00</div>
-    <input class="player-volume" id="playerVolume" type="range" min="0" max="1" step="0.01" value="0.9" data-cursor="link" aria-label="Volume">
+    <div class="minibar-prog" id="miniProg" data-cursor="link"><span class="minibar-prog-fill" id="miniProgFill"></span></div>
+    <div class="minibar-time" id="miniTime">0:00</div>
   </div>
   <audio id="audioEl" preload="none"></audio>
+
+  <!-- ============ ВЫДВИГАЮЩЕЕСЯ ОКНО ВЫБОРА ============ -->
+  <div class="sheet-backdrop" id="sheetBackdrop" hidden></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" hidden>
+    <div class="sheet-grab" id="sheetGrab"></div>
+    <div class="sheet-head">
+      <span class="sheet-title" id="sheetTitle"></span>
+      <button class="sheet-close" id="sheetClose" data-cursor="link" aria-label="Close">✕</button>
+    </div>
+    <div class="sheet-body" id="sheetBody"></div>
+  </div>
 
   <footer class="site-footer">
     <div class="footer-inner">
@@ -171,13 +268,14 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="data/i18n.js?v=2"></script>
-  <script src="data/content.js?v=2"></script>
-  <script src="data/peaks.js?v=2"></script>
-  <script src="js/nebula.js?v=2"></script>
-  <script src="js/cursor.js?v=2"></script>
-  <script src="js/player.js?v=2"></script>
-  <script src="js/extras.js?v=2"></script>
-  <script src="js/main.js?v=2"></script>
+  <script src="data/i18n.js?v=3"></script>
+  <script src="data/content.js?v=3"></script>
+  <script src="data/peaks.js?v=3"></script>
+  <script src="js/nebula.js?v=3"></script>
+  <script src="js/cursor.js?v=3"></script>
+  <script src="js/sheet.js?v=3"></script>
+  <script src="js/player.js?v=3"></script>
+  <script src="js/extras.js?v=3"></script>
+  <script src="js/main.js?v=3"></script>
 </body>
 </html>

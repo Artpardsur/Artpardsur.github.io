@@ -1,7 +1,18 @@
-/* Главный модуль: локализация, фильтры, рендер треков/звуков/проектов. */
+/* Главный модуль: локализация, статистика, фильтры-«окна», плейлист,
+   рендер звуков, проектов, контактов и таймлайна. */
 (function () {
   const C = window.CONTENT;
   const I = window.I18N;
+
+  /* Цвета кружков в окнах выбора — чтобы жанры и настроения различались глазом */
+  const GENRE_COLORS = {
+    orchestral: '#ffd60a', ambient: '#67e8f9', dark: '#8b5cf6', electronic: '#38bdf8',
+    lofi: '#f0abfc', jazz: '#fb923c', rock: '#f43f5e',
+  };
+  const MOOD_COLORS = {
+    calm: '#7dd3fc', sad: '#818cf8', happy: '#fde047',
+    tense: '#fb7185', epic: '#c084fc', cozy: '#fdba74',
+  };
 
   /* ---------- Локализация ---------- */
   let lang = localStorage.getItem('pardus-lang');
@@ -16,6 +27,7 @@
   };
   window.loc = function (obj) {
     if (typeof obj === 'string') return obj;
+    if (!obj) return '';
     return obj[lang] || obj.en || obj.ru || Object.values(obj)[0];
   };
 
@@ -57,76 +69,189 @@
 
     window.RoleRotator.set(t('hero.roles').split('|'));
 
-    renderFilters();
+    renderStats();
+    renderPicks();
     renderTracks();
     renderSfx();
     renderProjects();
     renderContacts();
     renderTimeline();
+    if (window.Player.current) window.Player.updateUI();
     window.observeAnims();
 
     document.getElementById('footerCopy').textContent =
       '© ' + new Date().getFullYear() + ' · ' + t('footer.copy');
   }
 
-  /* ---------- Фильтры ---------- */
-  const state = { genre: null, mood: null, project: '' };
+  /* ---------- Статистика: цифры набегают при появлении ---------- */
+  const statsEl = document.getElementById('stats');
+  let statsObserver = null;
 
-  function chipRow(container, labelKey, items, prefix, stateKey, moodClass) {
-    container.innerHTML = '';
-    const lab = document.createElement('span');
-    lab.className = 'chip-label';
-    lab.textContent = t(labelKey);
-    container.appendChild(lab);
-    items.forEach((id) => {
-      const b = document.createElement('button');
-      b.className = 'chip' + (moodClass ? ' chip-mood' : '');
-      b.textContent = t(prefix + id);
-      b.classList.toggle('active', state[stateKey] === id);
-      b.setAttribute('data-cursor', 'link');
-      b.addEventListener('click', () => {
-        state[stateKey] = state[stateKey] === id ? null : id;
-        renderFilters();
-        renderTracks();
+  function sfxCount() {
+    return C.sfx.reduce((n, g) => n + g.items.length, 0);
+  }
+
+  function renderStats() {
+    // цифры из content.js.stats важнее подсчёта: звуков и треков сделано
+    // больше, чем выложено на сайт
+    const st = C.stats || {};
+    const data = [
+      { key: 'stats.projects', value: st.projects || C.projects.length },
+      { key: 'stats.tracks', value: st.tracks || C.tracks.length },
+      { key: 'stats.sounds', value: st.sounds || sfxCount() },
+    ];
+    statsEl.innerHTML = '';
+    data.forEach((d, i) => {
+      const el = document.createElement('div');
+      el.className = 'stat';
+      el.style.setProperty('--d', (i * 0.12) + 's');
+      el.innerHTML = '<div class="stat-num" data-value="' + d.value + '">0</div>' +
+        '<div class="stat-cap"></div>';
+      el.querySelector('.stat-cap').textContent = t(d.key);
+      statsEl.appendChild(el);
+    });
+
+    if (statsObserver) statsObserver.disconnect();
+    statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        statsObserver.unobserve(en.target);
+        en.target.classList.add('in');
+        countUp(en.target.querySelector('.stat-num'));
       });
-      container.appendChild(b);
-    });
+    }, { threshold: 0.4 });
+    statsEl.querySelectorAll('.stat').forEach((el) => statsObserver.observe(el));
   }
 
-  function renderFilters() {
-    chipRow(document.getElementById('genreFilters'), 'music.genreLabel', C.genres, 'genre.', 'genre', false);
-    chipRow(document.getElementById('moodFilters'), 'music.moodLabel', C.moods, 'mood.', 'mood', true);
-
-    const sel = document.getElementById('projectSelect');
-    sel.innerHTML = '';
-    const optAll = document.createElement('option');
-    optAll.value = '';
-    optAll.textContent = t('music.allProjects');
-    sel.appendChild(optAll);
-    const withTracks = C.projects.filter((p) => C.tracks.some((tr) => tr.project === p.id));
-    withTracks.forEach((p) => {
-      const o = document.createElement('option');
-      o.value = p.id;
-      o.textContent = loc(p.name);
-      sel.appendChild(o);
-    });
-    sel.value = state.project;
-    sel.onchange = () => { state.project = sel.value; renderTracks(); };
-
-    document.getElementById('filterClear').onclick = () => {
-      state.genre = null; state.mood = null; state.project = '';
-      renderFilters();
-      renderTracks();
+  function countUp(el) {
+    const to = parseInt(el.dataset.value, 10) || 0;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = to; return; }
+    const dur = 1400;
+    const start = performance.now();
+    const tick = (now) => {
+      const p = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(to * eased);
+      if (p < 1) requestAnimationFrame(tick);
+      else el.textContent = to;
     };
+    requestAnimationFrame(tick);
   }
 
-  /* ---------- Треки ---------- */
+  /* ---------- Фильтры: кнопки открывают выдвигающееся окно ---------- */
+  const state = { genre: null, mood: null, project: null };
+
+  const pickGenre = document.getElementById('pickGenre');
+  const pickMood = document.getElementById('pickMood');
+  const pickProject = document.getElementById('pickProject');
+  const pickReset = document.getElementById('pickReset');
+
+  // сколько треков даст фильтр, если применить его поверх остальных
+  function countWith(patch) {
+    const s = Object.assign({}, state, patch);
+    return C.tracks.filter((tr) => matches(tr, s)).length;
+  }
+
+  function matches(tr, s) {
+    // '__none__' — треки, не привязанные ни к одному проекту
+    const projOk = !s.project ||
+      (s.project === '__none__' ? !tr.project : tr.project === s.project);
+    return (!s.genre || (tr.genres || []).includes(s.genre)) &&
+      (!s.mood || (tr.moods || []).includes(s.mood)) && projOk;
+  }
+
+  function setPickValue(btn, text, active) {
+    btn.querySelector('.pick-val').textContent = text;
+    btn.classList.toggle('active', !!active);
+  }
+
+  function renderPicks() {
+    setPickValue(pickGenre, state.genre ? t('genre.' + state.genre) : t('music.anyGenre'), state.genre);
+    setPickValue(pickMood, state.mood ? t('mood.' + state.mood) : t('music.anyMood'), state.mood);
+    const proj = state.project && C.projects.find((p) => p.id === state.project);
+    setPickValue(pickProject, proj ? loc(proj.name) : t('music.anyProject'), state.project);
+    pickReset.hidden = !(state.genre || state.mood || state.project);
+  }
+
+  // для маленьких миниатюр годится только картинка
+  function projectCover(p) {
+    const c = p.cover || p.media;
+    return (c && !/\.(mp4|webm|mov)$/i.test(c)) ? c : null;
+  }
+
+  pickGenre.addEventListener('click', () => {
+    window.Sheet.open({
+      title: t('music.genreLabel'),
+      anchor: pickGenre,
+      value: state.genre,
+      options: [{ value: null, label: t('music.anyGenre'), count: countWith({ genre: null }) }].concat(
+        C.genres.map((g) => ({
+          value: g, label: t('genre.' + g), color: GENRE_COLORS[g], count: countWith({ genre: g }),
+        }))),
+      onPick: (v) => { state.genre = v; renderPicks(); renderTracks(); },
+    });
+  });
+
+  pickMood.addEventListener('click', () => {
+    window.Sheet.open({
+      title: t('music.moodLabel'),
+      anchor: pickMood,
+      value: state.mood,
+      options: [{ value: null, label: t('music.anyMood'), count: countWith({ mood: null }) }].concat(
+        C.moods.map((m) => ({
+          value: m, label: t('mood.' + m), color: MOOD_COLORS[m], count: countWith({ mood: m }),
+        }))),
+      onPick: (v) => { state.mood = v; renderPicks(); renderTracks(); },
+    });
+  });
+
+  pickProject.addEventListener('click', () => {
+    const withTracks = C.projects.filter((p) => C.tracks.some((tr) => tr.project === p.id));
+    const opts = [{ value: null, label: t('music.anyProject'), count: countWith({ project: null }) }];
+    withTracks.forEach((p) => {
+      opts.push({ value: p.id, label: loc(p.name), img: projectCover(p), count: countWith({ project: p.id }) });
+    });
+    if (C.tracks.some((tr) => !tr.project)) {
+      opts.push({ value: '__none__', label: t('music.noProject'), count: countWith({ project: '__none__' }) });
+    }
+    window.Sheet.open({
+      title: t('music.projectLabel'),
+      anchor: pickProject,
+      value: state.project,
+      options: opts,
+      onPick: (v) => { state.project = v; renderPicks(); renderTracks(); },
+    });
+  });
+
+  pickReset.addEventListener('click', () => {
+    state.genre = state.mood = state.project = null;
+    renderPicks();
+    renderTracks();
+  });
+
+  /* ---------- Выдвижной плейлист ---------- */
+  const drawer = document.getElementById('drawer');
+  const listToggle = document.getElementById('listToggle');
+  const wideScreen = window.matchMedia('(min-width: 900px)').matches;
+  let drawerOpen = localStorage.getItem('pardus-drawer');
+  drawerOpen = drawerOpen === null ? wideScreen : drawerOpen === '1';
+
+  function applyDrawer() {
+    drawer.classList.toggle('open', drawerOpen);
+    drawer.setAttribute('aria-hidden', drawerOpen ? 'false' : 'true');
+    listToggle.classList.toggle('open', drawerOpen);
+    listToggle.setAttribute('aria-expanded', drawerOpen ? 'true' : 'false');
+  }
+  listToggle.addEventListener('click', () => {
+    drawerOpen = !drawerOpen;
+    localStorage.setItem('pardus-drawer', drawerOpen ? '1' : '0');
+    applyDrawer();
+  });
+  applyDrawer();
+
+  /* ---------- Плейлист ---------- */
   function filteredTracks() {
-    return C.tracks.filter((tr) =>
-      (!state.genre || tr.genres.includes(state.genre)) &&
-      (!state.mood || tr.moods.includes(state.mood)) &&
-      (!state.project || tr.project === state.project)
-    );
+    return C.tracks.filter((tr) => matches(tr, state));
   }
 
   function fmt(s) {
@@ -137,17 +262,11 @@
 
   function renderTracks() {
     const list = document.getElementById('trackList');
-    let tracks = filteredTracks();
-
-    // если у треков проставлены годы — группируем по ним (новые сверху)
-    const hasYears = tracks.some((tr) => tr.year);
-    if (hasYears) {
-      tracks = tracks.slice().sort((a, b) => (b.year || 0) - (a.year || 0));
-    }
+    const tracks = filteredTracks();
     window.Player.queue = tracks;
     list.innerHTML = '';
 
-    document.getElementById('trackCount').textContent = t('music.count').replace('{n}', tracks.length);
+    document.getElementById('listCount').textContent = tracks.length;
 
     if (!tracks.length) {
       const empty = document.createElement('div');
@@ -157,67 +276,37 @@
       return;
     }
 
-    let lastYear = null;
+    const cur = window.Player.current;
+    const playing = cur && !document.getElementById('audioEl').paused;
+
     tracks.forEach((tr, i) => {
-      if (hasYears) {
-        const y = tr.year ? String(tr.year) : t('music.yearOther');
-        if (y !== lastYear) {
-          lastYear = y;
-          const div = document.createElement('div');
-          div.className = 'track-year';
-          div.textContent = y;
-          list.appendChild(div);
-        }
-      }
       const proj = C.projects.find((p) => p.id === tr.project);
-      const row = document.createElement('div');
+      const row = document.createElement('button');
       row.className = 'track';
       row.dataset.id = tr.id;
-      row.style.animationDelay = Math.min(i * 0.04, 0.5) + 's';
-      if (window.Player.current && window.Player.current.id === tr.id && !document.getElementById('audioEl').paused) {
-        row.classList.add('playing');
+      row.setAttribute('data-cursor', 'link');
+      row.style.animationDelay = Math.min(i * 0.025, 0.4) + 's';
+      if (cur && cur.id === tr.id) {
+        row.classList.add('current');
+        if (playing) row.classList.add('playing');
       }
-
-      const tags = [
-        ...(proj ? ['<span class="track-tag tag-project">' + loc(proj.name) + '</span>'] : []),
-        ...tr.genres.map((g) => '<span class="track-tag">' + t('genre.' + g) + '</span>'),
-      ].join('');
-
       row.innerHTML =
-        '<button class="track-play" aria-label="Play">▶</button>' +
-        '<div class="track-meta"><div class="track-title">' + loc(tr.title) + '</div>' +
-        '<div class="track-tags">' + tags + '</div></div>' +
-        '<canvas class="track-wave"></canvas>' +
-        '<div class="track-dur">' + fmt(window.DURS[tr.id]) + '</div>';
-
+        '<span class="track-num"><b>' + (i + 1) + '</b>' +
+        '<span class="track-eq"><i></i><i></i><i></i></span></span>' +
+        '<span class="track-meta">' +
+        '<span class="track-title"></span>' +
+        '<span class="track-proj"></span></span>' +
+        '<span class="track-dur">' + fmt(window.DURS[tr.id]) + '</span>' +
+        '<span class="track-line"><span class="track-line-fill"></span></span>';
+      row.querySelector('.track-title').textContent = loc(tr.title);
+      row.querySelector('.track-proj').textContent = proj ? loc(proj.name) : t('music.noProject');
       row.addEventListener('click', () => window.Player.play(tr));
       list.appendChild(row);
-      const wave = row.querySelector('.track-wave');
-      // по волне играющего трека можно перематывать прямо из списка
-      const rowSeek = (e) => {
-        if (window.Player.current && window.Player.current.id === tr.id) {
-          e.stopPropagation();
-          if (e.type === 'pointerdown') {
-            const r = wave.getBoundingClientRect();
-            window.Player.seekFraction((e.clientX - r.left) / r.width);
-          }
-        }
-      };
-      wave.addEventListener('pointerdown', rowSeek);
-      wave.addEventListener('click', rowSeek);
-      requestAnimationFrame(() => window.Player.drawStaticWave(wave, tr.id));
     });
-  }
 
-  window.Player.onChange = () => {
-    // перерисовать статичные волны, когда сменился трек
-    document.querySelectorAll('.track').forEach((el) => {
-      if (!window.Player.current || el.dataset.id !== window.Player.current.id) {
-        const wave = el.querySelector('.track-wave');
-        if (wave) window.Player.drawStaticWave(wave, el.dataset.id);
-      }
-    });
-  };
+    // в плеер сразу подставляем первый трек — но не запускаем без нажатия
+    if (!window.Player.current) window.Player.load(tracks[0], false);
+  }
 
   /* ---------- Саунд-дизайн ---------- */
   function renderSfx() {
@@ -227,8 +316,9 @@
       const proj = C.projects.find((p) => p.id === group.project);
       const g = document.createElement('div');
       g.className = 'sfx-group';
-      g.innerHTML = '<div class="sfx-group-title">' + (proj ? loc(proj.name) : group.project) + '</div>' +
+      g.innerHTML = '<div class="sfx-group-title"></div>' +
         '<div class="sfx-group-sub">' + t('sound.groupSub') + '</div>';
+      g.querySelector('.sfx-group-title').textContent = proj ? loc(proj.name) : group.project;
       const pads = document.createElement('div');
       pads.className = 'sfx-pads';
       group.items.forEach((item) => {
@@ -236,8 +326,9 @@
         pad.className = 'sfx-pad';
         pad.setAttribute('data-cursor', 'link');
         pad.innerHTML = '<span class="sfx-pad-icon">' + item.icon + '</span>' +
-          '<span class="sfx-pad-name">' + loc(item.name) + '</span>' +
+          '<span class="sfx-pad-name"></span>' +
           '<span class="sfx-pad-bar"></span>';
+        pad.querySelector('.sfx-pad-name').textContent = loc(item.name);
         let cur = null; // играющий сейчас экземпляр этого пада
         pad.addEventListener('click', () => {
           // повторное нажатие — остановить звук
@@ -295,12 +386,23 @@
       } else if (p.videoSoon) {
         media = '<div class="project-media-wrap project-media-soon"><span class="pm-icon">🎬</span><span>' + t('projects.videoSoon') + '</span></div>';
       }
+      const nTracks = C.tracks.filter((tr) => tr.project === p.id).length;
       card.innerHTML = media +
-        '<div class="project-head"><div class="project-name">' + loc(p.name) + '</div>' +
+        '<div class="project-head"><div class="project-name"></div>' +
         '<span class="project-type">' + t('ptype.' + p.type) + '</span></div>' +
         '<div class="project-roles">' + roles + '</div>' +
-        '<p class="project-desc">' + loc(p.desc) + '</p>' +
+        '<p class="project-desc"></p>' +
+        (nTracks ? '<button class="project-listen" data-cursor="link">' +
+          '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>' +
+          '<span>' + t('projects.listen') + '</span>' +
+          '<b>' + nTracks + '</b></button>' : '') +
         (links ? '<div class="project-links">' + links + '</div>' : '');
+      card.querySelector('.project-name').textContent = loc(p.name);
+      card.querySelector('.project-desc').textContent = loc(p.desc);
+
+      const listen = card.querySelector('.project-listen');
+      if (listen) listen.addEventListener('click', () => openProjectPlaylist(p.id));
+
       card.addEventListener('pointermove', (e) => {
         const r = card.getBoundingClientRect();
         card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
@@ -308,6 +410,25 @@
       });
       grid.appendChild(card);
     });
+  }
+
+  /* Кнопка на карточке проекта: перейти к плееру с плейлистом этого проекта */
+  function openProjectPlaylist(projectId) {
+    state.genre = null;
+    state.mood = null;
+    state.project = projectId;
+    renderPicks();
+    renderTracks();
+    if (!drawerOpen) {
+      drawerOpen = true;
+      localStorage.setItem('pardus-drawer', '1');
+      applyDrawer();
+    }
+    document.getElementById('music').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const first = window.Player.queue[0];
+    if (first) window.Player.play(first);
+    const proj = C.projects.find((p) => p.id === projectId);
+    if (proj) window.showToast(t('music.playlist') + ' · ' + loc(proj.name));
   }
 
   /* ---------- Контакты ---------- */
@@ -321,7 +442,8 @@
       if (c.url) { el.href = c.url; el.target = '_blank'; el.rel = 'noopener'; }
       el.innerHTML = '<span class="contact-icon">' + c.icon + '</span>' +
         '<span><span class="contact-label">' + t('contact.' + c.id) + '</span><br>' +
-        '<span class="contact-value">' + c.value + '</span></span>';
+        '<span class="contact-value"></span></span>';
+      el.querySelector('.contact-value').textContent = c.value;
       if (c.copy) {
         el.addEventListener('click', (e) => {
           if (!c.url) e.preventDefault();
@@ -346,6 +468,21 @@
       tl.appendChild(el);
     });
   }
+
+  /* Плеер просит перерисовать подсветку строк списка */
+  window.Player.onChange = function () {
+    const cur = window.Player.current;
+    const playing = cur && !document.getElementById('audioEl').paused;
+    document.querySelectorAll('.track').forEach((el) => {
+      const isCur = cur && el.dataset.id === cur.id;
+      el.classList.toggle('current', !!isCur);
+      el.classList.toggle('playing', !!(isCur && playing));
+      if (!isCur) {
+        const fill = el.querySelector('.track-line-fill');
+        if (fill) fill.style.width = '0%';
+      }
+    });
+  };
 
   /* ---------- Старт ---------- */
   applyLang();

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://artpardsur.github.io/sitemap.xml

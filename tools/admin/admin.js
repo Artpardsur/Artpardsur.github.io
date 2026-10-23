@@ -3,7 +3,8 @@
    через маленький API из tools/admin.py. */
 (function () {
   const LANGS = ['ru', 'en', 'es', 'de', 'fr', 'it', 'pt', 'zh', 'ja'];
-  const TYPES = ['vn', 'game', 'series', 'release', 'remaster', 'freelance', 'study', 'own'];
+  const TYPES = ['vn', 'game', 'series', 'film', 'audio', 'release', 'remaster', 'freelance', 'study', 'own'];
+  const STATUSES = ['wip', 'demo', 'beta', 'released', 'done', 'announce', 'quiet', 'dropped'];
   const ROLES = ['composer', 'sound', 'dev'];
   const DIR_LABEL = { media: 'media/', music: 'audio/music/', sfx: 'audio/sfx/' };
 
@@ -140,6 +141,17 @@
     return wrap;
   }
 
+  // год «2025» или месяц «2026-10»
+  function monthInput(value, onChange) {
+    const inp = h('input', { type: 'text', value: value || '', placeholder: '2025 или 2026-10', style: 'max-width:200px' });
+    inp.addEventListener('input', () => {
+      const v = inp.value.trim();
+      inp.classList.toggle('bad', !!v && !/^\d{4}(-(0[1-9]|1[0-2]))?$/.test(v));
+      onChange(v); markDirty();
+    });
+    return inp;
+  }
+
   function selectBox(options, value, onChange) {
     const s = h('select');
     options.forEach((o) => {
@@ -265,7 +277,7 @@
   function renderSide() {
     const side = $('side');
     side.innerHTML = '';
-    if (tab === 'git') return;
+    if (tab === 'git' || tab === 'home') return;
 
     const search = h('input', { class: 'search', type: 'text', placeholder: 'Поиск…', value: filter });
     search.addEventListener('input', () => { filter = search.value; renderSide(); });
@@ -381,6 +393,7 @@
     edit.innerHTML = '';
     if (tab === 'git') return renderGit(edit);
     if (tab === 'stats') return renderNumbers(edit);
+    if (tab === 'home') return renderHome(edit);
     if (tab === 'projects') return renderProject(edit);
     if (tab === 'tracks') return renderTrack(edit);
     if (tab === 'sfx') return renderSfx(edit);
@@ -410,10 +423,25 @@
 
     edit.append(row('Моя роль', checks(ROLES, p.roles = p.roles || [], (r) => ru('role.' + r), null)));
 
+    edit.append(row('Статус проекта',
+      selectBox([{ value: null, label: '— не указан —' }].concat(STATUSES.map((s) => ({ value: s, label: ru('status.' + s) }))),
+        p.status || null, (v) => { p.status = v || ''; }),
+      h('div', { class: 'hint', text: 'По статусу работают кнопки-фильтры над проектами. «В работе», «Вышло демо» и «Открытый тест» показывают срок как «2025 → сейчас».' })));
+
+    edit.append(row('Когда начат и последняя активность',
+      h('div', { class: 'links-row' },
+        monthInput(p.started, (v) => { p.started = v; }),
+        monthInput(p.updated, (v) => { p.updated = v; })),
+      h('div', { class: 'hint', text: 'Год (2025) или год и месяц (2026-10). По последней активности работает сортировка «Свежие», по началу — «Давние». Пусто — проект в конце списка.' })));
+
     edit.append(row('Картинка или видео проекта',
       fileField('media', p.media || '', (v) => { p.media = v || ''; markDirty(); }),
       h('label', { class: 'check' + (p.mediaContain ? ' on' : ''), style: 'margin-top:10px', onclick: function () { p.mediaContain = !p.mediaContain; this.classList.toggle('on'); markDirty(); } },
         'Показывать целиком (для нестандартных пропорций)')));
+
+    edit.append(row('Картинка для большой карточки в «Код и моды» (необязательно)',
+      fileField('media', p.featureMedia || '', (v) => { p.featureMedia = v || ''; markDirty(); }),
+      h('div', { class: 'hint', text: 'Пусто — возьмётся основная картинка проекта.' })));
 
     edit.append(row('Обложка для плеера (необязательно)',
       fileField('media', p.cover || '', (v) => { p.cover = v || ''; markDirty(); }),
@@ -578,6 +606,95 @@
     });
   }
 
+  /* ---------------- вкладка «Главная»: анонс, статус, обновления, моды ---------------- */
+
+  function renderHome(edit) {
+    const A = C.announce = C.announce || { project: 'vremennoy-potok', date: '', url: 'https://creator4444.itch.io/', latest: null };
+    const projOpts = C.projects.map((p) => ({ value: p.id, label: p.name.ru || p.id }));
+
+    edit.append(h('h2', { text: 'Анонс и отсчёт' }));
+    edit.append(h('div', { class: 'sub', text: 'Карточка справа от имени на главной. Отсчёт идёт до полуночи выбранного дня по Москве.' }));
+    edit.append(row('Проект', selectBox(projOpts, A.project, (v) => { A.project = v; })));
+    const day = h('input', { type: 'date', value: (A.date || '').slice(0, 10), style: 'max-width:220px' });
+    day.addEventListener('input', () => { A.date = day.value ? day.value + 'T00:00:00+03:00' : ''; markDirty(); });
+    edit.append(row('День анонса', day, h('div', { class: 'hint', text: 'Пусто — карточка анонса скрыта.' })));
+    edit.append(row('Ссылка кнопки «Следить»', textInput(A.url, (v) => { A.url = v; })));
+
+    edit.append(h('h2', { text: 'Последняя публикация на itch.io' }));
+    edit.append(h('div', { class: 'sub', text: 'Строка под отсчётом. Пока заголовок пуст — строка скрыта.' }));
+    const L = A.latest || { date: '', title: {}, url: '' };
+    const keepLatest = () => { A.latest = (L.title.ru || L.title.en) ? L : null; };
+    const ld = h('input', { type: 'date', value: L.date || '', style: 'max-width:220px' });
+    ld.addEventListener('input', () => { L.date = ld.value; keepLatest(); markDirty(); });
+    edit.append(row('Дата', ld));
+    const titleBox = multilang(L.title, false);
+    titleBox.addEventListener('input', keepLatest);
+    edit.append(row('Заголовок', titleBox));
+    edit.append(row('Ссылка на публикацию', textInput(L.url, (v) => { L.url = v; keepLatest(); })));
+
+    edit.append(h('h2', { text: 'Статус' }));
+    edit.append(row('Чем занят сейчас (окно status.txt)', multilang(C.now = C.now || {}, true),
+      h('div', { class: 'hint', text: 'Пусто во всех языках — окно скрыто.' })));
+
+    edit.append(h('h2', { text: 'Обновления сайта' }));
+    edit.append(h('div', { class: 'sub', text: 'Окно updates.log. Новые — сверху, на сайте видны первые четыре.' }));
+    C.updates = C.updates || [];
+    const upWrap = h('div');
+    function paintUpdates() {
+      upWrap.innerHTML = '';
+      C.updates.forEach((u, ui) => {
+        const d = h('input', { type: 'date', value: u.date || '', style: 'max-width:200px' });
+        d.addEventListener('input', () => { u.date = d.value; markDirty(); });
+        upWrap.append(h('div', { class: 'card' },
+          h('div', { class: 'links-row' }, d,
+            h('button', { class: 'btn small danger', text: '✕ удалить', onclick: () => { C.updates.splice(ui, 1); markDirty(); paintUpdates(); } })),
+          multilang(u.text = u.text || {}, false)));
+      });
+    }
+    paintUpdates();
+    edit.append(h('button', { class: 'btn small primary', text: '+ новое обновление сверху', onclick: () => {
+      C.updates.unshift({ date: new Date().toISOString().slice(0, 10), text: {} }); markDirty(); paintUpdates();
+    } }), upWrap);
+
+    C.code = C.code || { featured: [], mods: [] };
+    edit.append(h('h2', { text: 'Код и моды' }));
+    edit.append(row('Большие карточки в разделе «Код и моды»', checks(C.projects.map((p) => p.id), C.code.featured = C.code.featured || [],
+      (id) => (C.projects.find((p) => p.id === id).name.ru || id), null)));
+    const modWrap = h('div');
+    function paintMods() {
+      modWrap.innerHTML = '';
+      (C.code.mods = C.code.mods || []).forEach((m, mi) => {
+        m.links = m.links || [];
+        const links = h('div');
+        const paintLinks = () => {
+          links.innerHTML = '';
+          m.links.forEach((l, li) => links.append(h('div', { class: 'links-row' },
+            textInput(l.label, (v) => { l.label = v; }, { placeholder: 'Название' }),
+            textInput(l.url, (v) => { l.url = v; }, { placeholder: 'https://…' }),
+            h('button', { class: 'btn small danger', text: '✕', onclick: () => { m.links.splice(li, 1); markDirty(); paintLinks(); } }))));
+          links.append(h('button', { class: 'btn small', text: '+ ссылка', onclick: () => { m.links.push({ label: '', url: '' }); markDirty(); paintLinks(); } }));
+        };
+        paintLinks();
+        modWrap.append(h('div', { class: 'card' },
+          h('h3', { text: (m.name && m.name.ru) || 'Мод' }),
+          row('Название', multilang(m.name = m.name || {}, false)),
+          row('Игра', textInput(m.game, (v) => { m.game = v; })),
+          row('Статус', selectBox(STATUSES.map((st) => ({ value: st, label: ru('status.' + st) })), m.status, (v) => { m.status = v; })),
+          row('Описание', multilang(m.desc = m.desc || {}, true),
+            h('div', { class: 'hint', text: 'Пусто — на сайте «Подробности — с первым релизом мода».' })),
+          row('Ссылки (Steam Workshop, страница мода…)', links),
+          h('button', { class: 'btn small danger', text: 'Удалить мод', onclick: () => {
+            if (confirm('Удалить мод «' + ((m.name && m.name.ru) || '') + '»?')) { C.code.mods.splice(mi, 1); markDirty(); paintMods(); }
+          } })));
+      });
+    }
+    paintMods();
+    edit.append(modWrap, h('button', { class: 'btn small primary', text: '+ мод', onclick: () => {
+      C.code.mods.push({ id: 'mod-' + (C.code.mods.length + 1), name: { ru: 'Новый мод' }, game: '', status: 'wip', desc: {}, links: [] });
+      markDirty(); paintMods();
+    } }));
+  }
+
   /* ---------------- вкладка «Публикация» ---------------- */
 
   async function renderGit(edit) {
@@ -680,7 +797,7 @@
 
   function render() {
     document.querySelectorAll('.tab').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
-    document.querySelector('.wrap').classList.toggle('wide', tab === 'git' || tab === 'stats');
+    document.querySelector('.wrap').classList.toggle('wide', tab === 'git' || tab === 'stats' || tab === 'home');
     renderSide();
     renderEdit();
     setState();

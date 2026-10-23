@@ -214,6 +214,15 @@
     if (el && !e.repeat) playNote(parseInt(el.dataset.semi, 10), el);
   });
 
+  /* ---- Анимации только на экране ----
+     Бесконечные CSS-анимации (звёзды сцен, лампочки, пульс статусов) в разделах
+     за пределами экрана ставятся на паузу: замер — около трети загрузки
+     процессора в покое уходило на них. На экране всё движется как прежде. */
+  const animIo = new IntersectionObserver((entries) => {
+    entries.forEach((en) => en.target.classList.toggle('anim-off', !en.isIntersecting));
+  }, { rootMargin: '200px 0px' });
+  document.querySelectorAll('main > section, .site-footer').forEach((el) => animIo.observe(el));
+
   /* ---- Konami-код: ↑↑↓↓←→←→BA — меняет палитру ---- */
   const seq = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
   let pos = 0;

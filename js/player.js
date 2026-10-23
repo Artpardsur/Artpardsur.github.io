@@ -140,11 +140,24 @@
     return audio.duration ? audio.currentTime / audio.duration : 0;
   }
 
+  // Перерисовка — только когда музыка играет или что-то поменялось (трек,
+  // перемотка, размер окна, Konami-тема): на паузе цикл почти ничего не делает.
+  let waveDirty = true;
+  let playedColor = css('--yellow');
+  Player.markDirty = () => { waveDirty = true; };
+  addEventListener('resize', () => { waveDirty = true; });
+  new MutationObserver(() => { playedColor = css('--yellow'); waveDirty = true; })
+    .observe(document.documentElement, { attributes: true, attributeFilter: ['data-alt-theme'] });
+  audio.addEventListener('seeked', () => { waveDirty = true; });
+
   function renderLoop() {
-    if (Player.current) {
+    if (Player.current && (waveDirty || !audio.paused)) {
+      waveDirty = false;
       const peaks = peaksFor(Player.current);
       const pr = progress();
-      drawWave(waveCanvas, waveCtx, peaks, pr, css('--yellow'), 'rgba(139,92,246,0.4)');
+      // форму волны рисуем, только пока сцена на экране (когда она снова появится,
+      // наблюдатель ниже пометит волну к перерисовке); мини-плеер — всегда
+      if (stageVisible) drawWave(waveCanvas, waveCtx, peaks, pr, playedColor, 'rgba(139,92,246,0.4)');
       const dur = audio.duration || window.DURS[Player.current.id] || 0;
       curEl.textContent = fmt(audio.currentTime);
       totalEl.textContent = fmt(dur);
@@ -225,6 +238,7 @@
   function updateUI() {
     const tr = Player.current;
     if (!tr) return;
+    waveDirty = true;
     const proj = window.CONTENT.projects.find((p) => p.id === tr.project);
     const title = window.loc(tr.title);
     const projName = proj ? window.loc(proj.name) : window.t('music.noProject');
@@ -314,6 +328,7 @@
   }
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => { stageVisible = e.isIntersecting; });
+    if (stageVisible) waveDirty = true;
     updateMinibar();
   }, { threshold: 0.12 });
   io.observe(stage);

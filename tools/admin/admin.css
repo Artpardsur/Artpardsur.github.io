@@ -156,7 +156,7 @@ a { color: var(--violet-soft); }
   margin-bottom: 6px;
 }
 .hint { font-size: 12.5px; color: var(--muted); margin-top: 5px; }
-input[type=text], input[type=number], select, textarea {
+input[type=text], input[type=number], input[type=date], input[type=month], select, textarea {
   width: 100%;
   background: var(--panel-2);
   border: 1px solid var(--border);
@@ -303,3 +303,7 @@ pre.out {
   .git-cols { grid-template-columns: 1fr; }
   .top { flex-wrap: wrap; }
 }
+
+/* календарь в полях даты — светлый значок на тёмном */
+input[type=date], input[type=month] { color-scheme: dark; max-width: 240px; }
+input.bad { border-color: #f43f5e; }

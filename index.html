@@ -5,15 +5,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Пардус — композитор, саунд-дизайнер, программист</title>
   <meta name="description" content="Артём Лиджиев (Pardus) — композитор, саунд-дизайнер и программист. Музыка и звук для игр, визуальных новелл и анимации.">
+  <link rel="canonical" href="https://artpardsur.github.io/">
   <meta property="og:title" content="Pardus — composer · sound designer · developer">
   <meta property="og:description" content="Музыка и звук для игр, визуальных новелл и анимации.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://artpardsur.github.io/">
+  <meta property="og:image" content="https://artpardsur.github.io/media/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Артём Лиджиев",
+    "alternateName": "Pardus",
+    "url": "https://artpardsur.github.io/",
+    "image": "https://artpardsur.github.io/media/og.jpg",
+    "jobTitle": "Композитор, саунд-дизайнер, разработчик",
+    "description": "Музыка и звук для игр, визуальных новелл и анимации.",
+    "email": "mailto:artemlidzhiev.4444@gmail.com",
+    "sameAs": [
+      "https://t.me/abcdefg445454",
+      "https://www.youtube.com/@Pardus4444",
+      "https://creator4444.itch.io/"
+    ]
+  }
+  </script>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0714'/%3E%3Cpath d='M22 46V20h12a9 9 0 1 1 0 18h-6' fill='none' stroke='%23ffd60a' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='22' cy='46' r='4' fill='%238b5cf6'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;800&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Unbounded — имя и цифры, Manrope — текст, Cormorant — заголовки разделов,
+       Pixelify — короткие подписи окон, Caveat — надписи на кассетах -->
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;800&family=Manrope:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,600;1,500&family=Pixelify+Sans:wght@400;600&family=Caveat:wght@600&display=swap" rel="stylesheet">
   <!-- ?v= — версия для сброса кэша браузеров; увеличивать при правках CSS/JS -->
-  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/style.css?v=4">
 </head>
 <body>
 
@@ -55,6 +81,7 @@
 
     <!-- ============ HERO ============ -->
     <section class="hero" id="hero">
+      <div class="hero-main">
       <p class="hero-hello" data-i18n="hero.hello" data-anim="letters">Привет, я</p>
       <h1 class="hero-name" data-anim="letters-stagger">
         <span class="hero-name-real" data-i18n="hero.name">Артём Лиджиев</span>
@@ -69,11 +96,39 @@
         <a class="btn btn-primary" href="#music" data-i18n="hero.listen" data-cursor="link">Слушать музыку</a>
         <a class="btn btn-ghost" href="#contacts" data-i18n="hero.contact" data-cursor="link">Связаться</a>
       </div>
+      </div>
+
+      <!-- Анонс личного проекта: отсчёт до даты из content.js → announce -->
+      <aside class="announce framed" id="announce" aria-live="off" hidden>
+        <p class="announce-kicker" data-i18n="announce.kicker">Личный проект · анонс</p>
+        <h2 class="announce-title" id="announceTitle"></h2>
+        <p class="announce-when" id="announceWhen"></p>
+        <div class="countdown" id="countdown">
+          <div class="cd-cell"><span class="cd-num" data-unit="d">0</span><span class="cd-cap" data-i18n="announce.d">дней</span></div>
+          <div class="cd-cell"><span class="cd-num" data-unit="h">00</span><span class="cd-cap" data-i18n="announce.h">часов</span></div>
+          <div class="cd-cell"><span class="cd-num" data-unit="m">00</span><span class="cd-cap" data-i18n="announce.m">минут</span></div>
+          <div class="cd-cell"><span class="cd-num" data-unit="s">00</span><span class="cd-cap" data-i18n="announce.s">секунд</span></div>
+        </div>
+        <a class="btn btn-ghost announce-follow" id="announceLink" href="https://creator4444.itch.io/" target="_blank" rel="noopener" data-cursor="link" data-i18n="announce.follow">Следить на itch.io</a>
+        <p class="announce-latest" id="announceLatest" hidden></p>
+      </aside>
+    </section>
+
+    <!-- ============ СТАТУС И ОБНОВЛЕНИЯ ============ -->
+    <section class="desk" aria-label="Pardus — status">
+      <div class="win win-now" id="winNow" data-anim="fade">
+        <div class="win-bar"><i></i><i></i><span>status.txt</span></div>
+        <p class="win-body now-text" id="nowText"></p>
+      </div>
+      <div class="win win-updates" data-anim="fade">
+        <div class="win-bar"><i></i><i></i><span>updates.log</span></div>
+        <ul class="win-body updates-list" id="updatesList"></ul>
+      </div>
     </section>
 
     <!-- ============ ОБО МНЕ ============ -->
     <section class="section" id="about">
-      <h2 class="section-title" data-i18n="about.title" data-anim="letters">Обо мне</h2>
+      <h2 class="section-title" data-file="~/about.txt" data-i18n="about.title" data-anim="letters">Обо мне</h2>
       <div class="about-grid">
         <div class="about-text">
           <p data-i18n="about.p1" data-anim="fade"></p>
@@ -86,18 +141,36 @@
 
     <!-- ============ МУЗЫКА ============ -->
     <section class="section" id="music">
-      <h2 class="section-title" data-i18n="music.title" data-anim="letters">Музыка</h2>
+      <h2 class="section-title" data-file="~/music.mp3" data-i18n="music.title" data-anim="letters">Музыка</h2>
       <p class="section-sub" data-i18n="music.sub">Один плеер — вся музыка. Выбери жанр, настроение или проект.</p>
 
       <!-- Анимированная статистика -->
       <div class="stats" id="stats"></div>
 
-      <!-- ---------- Плеер ---------- -->
+      <!-- ---------- Кассеты: у каждого проекта своя, нажатие включает плеер ---------- -->
+      <div class="mixtapes" id="mixtapes" role="group" aria-roledescription="carousel" aria-labelledby="mtTitle" tabindex="0">
+        <div class="mt-stage" id="mtStage"></div>
+        <button class="mt-arrow mt-prev" id="mtPrev" data-cursor="link" data-i18n-aria="music.prevTape" aria-label="Предыдущая кассета">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="mt-arrow mt-next" id="mtNext" data-cursor="link" data-i18n-aria="music.nextTape" aria-label="Следующая кассета">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="mt-caption">
+          <div class="mt-kind" id="mtKind"></div>
+          <div class="mt-title" id="mtTitle"></div>
+          <div class="mt-hint" data-i18n="music.tapesHint">Листай стрелками и нажми на кассету — включится плеер</div>
+        </div>
+      </div>
+
+      <!-- ---------- Плеер: раскрывается, когда выбрана кассета ---------- -->
+      <div class="stage-wrap" id="stageWrap"><div class="stage-wrap-inner">
       <div class="stage" id="stage">
+        <div class="win-bar stage-bar" aria-hidden="true"><i></i><i></i><span>player.mp3</span></div>
         <div class="stage-top">
           <div class="stage-cover" id="stageCover">
             <div class="stage-cover-blur" id="stageCoverBlur"></div>
-            <img class="stage-cover-img" id="stageCoverImg" alt="" hidden>
+            <img class="stage-cover-img" id="stageCoverImg" alt="" width="300" height="300" hidden>
             <video class="stage-cover-img" id="stageCoverVid" muted loop playsinline disablepictureinpicture hidden></video>
             <span class="stage-cover-note">♪</span>
             <span class="stage-eq" id="stageEq"><i></i><i></i><i></i><i></i></span>
@@ -176,40 +249,90 @@
           </div>
         </div>
       </div>
+      </div></div>
     </section>
 
     <!-- ============ САУНД-ДИЗАЙН ============ -->
     <section class="section" id="sound">
-      <h2 class="section-title" data-i18n="sound.title" data-anim="letters">Саунд-дизайн</h2>
-      <p class="section-sub" data-i18n="sound.sub">Нажимай на пады — каждый звук сделан для реального проекта.</p>
-      <div class="sfx-groups" id="sfxGroups"></div>
+      <h2 class="section-title" data-file="~/sound.exe" data-i18n="sound.title" data-anim="letters">Саунд-дизайн</h2>
+      <p class="section-sub" data-i18n="sound.sub">Сцены из настоящих проектов: нажимай на светящиеся точки — и услышишь, из чего они собраны. Или достань кассету.</p>
+
+      <div class="win sound-win">
+        <div class="win-bar sound-bar">
+          <i></i><i></i><span>sound.exe</span>
+          <div class="sound-tabs" role="tablist" aria-label="Sound design">
+            <button class="sound-tab active" role="tab" aria-selected="true" aria-controls="scenePanel" id="tabScenes" data-cursor="link" data-i18n="sound.tabScenes">Сцены</button>
+            <button class="sound-tab" role="tab" aria-selected="false" aria-controls="tapesPanel" id="tabTapes" data-cursor="link" data-i18n="sound.tabTapes">Кассеты</button>
+          </div>
+        </div>
+
+        <!-- Сцены: нарисованная сцена, светящиеся точки — звуки из проекта -->
+        <div class="scene-panel" id="scenePanel" role="tabpanel" aria-labelledby="tabScenes">
+          <div class="scene-picks" id="scenePicks"></div>
+          <div class="scene" id="scene">
+            <div class="scene-scroll" id="sceneScroll">
+              <div class="scene-canvas" id="sceneCanvas">
+                <div class="scene-art" id="sceneArt" aria-hidden="true"></div>
+                <div class="scene-spots" id="sceneSpots"></div>
+              </div>
+            </div>
+            <div class="scene-head">
+              <span class="scene-project" id="sceneProject"></span>
+              <span class="scene-title" id="sceneTitle"></span>
+            </div>
+            <div class="scene-now" id="sceneNow" aria-live="polite"><span class="scene-now-note">♪</span><span id="sceneNowText"></span></div>
+            <button class="btn btn-primary scene-all" id="sceneAll" data-cursor="link"></button>
+          </div>
+        </div>
+
+        <!-- Кассеты: у каждого проекта своя; в деке — список звуков кнопками -->
+        <div class="tapes-panel" id="tapesPanel" role="tabpanel" aria-labelledby="tabTapes" hidden>
+          <p class="tapes-hint" data-i18n="sound.tapesHint">У каждого проекта своя кассета.</p>
+          <div class="tapes-rack" id="tapesRack"></div>
+          <div class="deck" id="deck">
+            <div class="deck-slot" id="deckSlot"></div>
+            <div class="deck-side">
+              <div class="deck-head"><span class="deck-led"></span><span id="deckLabel"></span></div>
+              <div class="deck-vu" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="deck-list" id="deckList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- ============ ПРОЕКТЫ ============ -->
     <section class="section" id="projects">
-      <h2 class="section-title" data-i18n="projects.title" data-anim="letters">Проекты</h2>
+      <h2 class="section-title" data-file="~/projects/" data-i18n="projects.title" data-anim="letters">Проекты</h2>
       <p class="section-sub" data-i18n="projects.sub">Игры, визуальные новеллы и анимация, над которыми я работал.</p>
+      <div class="win proj-bar">
+        <div class="win-bar"><i></i><i></i><span>projects/</span></div>
+        <div class="proj-tools">
+          <div class="proj-filters" id="projFilters" role="group" aria-label="Status"></div>
+          <div class="proj-sort" id="projSort" role="group" aria-label="Order"></div>
+        </div>
+      </div>
       <div class="projects-grid" id="projectsGrid"></div>
     </section>
 
     <!-- ============ КОД ============ -->
     <section class="section" id="code">
-      <h2 class="section-title" data-i18n="code.title" data-anim="letters">Программирование</h2>
+      <h2 class="section-title" data-file="~/code_and_mods/" data-i18n="nav.code" data-anim="letters">Программирование</h2>
       <div class="code-grid">
         <div class="code-text">
           <p data-i18n="code.p1" data-anim="fade"></p>
           <p data-i18n="code.p2" data-anim="fade"></p>
         </div>
-        <div class="code-soon" data-anim="fade">
-          <div class="code-soon-badge" data-i18n="code.soonBadge">Скоро</div>
-          <p data-i18n="code.soon">Здесь появятся мои личные проекты — они уже в разработке.</p>
-        </div>
       </div>
+      <!-- Большие карточки: проекты, где я разработчик (content.js → code.featured) -->
+      <div class="code-featured" id="codeFeatured"></div>
+      <h3 class="code-sub" data-i18n="code.mods">Моды</h3>
+      <div class="mods-grid" id="modsGrid"></div>
     </section>
 
     <!-- ============ КОНТАКТЫ ============ -->
     <section class="section" id="contacts">
-      <h2 class="section-title" data-i18n="contacts.title" data-anim="letters">Контакты</h2>
+      <h2 class="section-title" data-file="~/contacts.vcf" data-i18n="contacts.title" data-anim="letters">Контакты</h2>
       <p class="section-sub" data-i18n="contacts.sub">Открыт для заказов и сотрудничества.</p>
       <div class="contacts-grid" id="contactsGrid"></div>
     </section>
@@ -218,7 +341,7 @@
   <!-- ============ МИНИ-ПЛЕЕР (появляется, когда большой уехал за экран) ============ -->
   <div class="minibar" id="minibar" aria-hidden="true">
     <button class="minibar-cover" id="miniCover" data-cursor="link" aria-label="To player">
-      <img id="miniCoverImg" alt="" hidden>
+      <img id="miniCoverImg" alt="" width="48" height="48" hidden>
       <span class="minibar-cover-note">♪</span>
     </button>
     <button class="sbtn minibar-side" id="miniPrev" data-cursor="link" aria-label="Previous">
@@ -268,14 +391,15 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="data/i18n.js?v=3"></script>
-  <script src="data/content.js?v=3"></script>
-  <script src="data/peaks.js?v=3"></script>
-  <script src="js/nebula.js?v=3"></script>
-  <script src="js/cursor.js?v=3"></script>
-  <script src="js/sheet.js?v=3"></script>
-  <script src="js/player.js?v=3"></script>
-  <script src="js/extras.js?v=3"></script>
-  <script src="js/main.js?v=3"></script>
+  <script src="data/i18n.js?v=4"></script>
+  <script src="data/content.js?v=4"></script>
+  <script src="data/peaks.js?v=4"></script>
+  <script src="js/nebula.js?v=4"></script>
+  <script src="js/cursor.js?v=4"></script>
+  <script src="js/sheet.js?v=4"></script>
+  <script src="js/player.js?v=4"></script>
+  <script src="js/extras.js?v=4"></script>
+  <script src="js/sound.js?v=4"></script>
+  <script src="js/main.js?v=4"></script>
 </body>
 </html>

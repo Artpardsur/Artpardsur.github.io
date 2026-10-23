@@ -15,15 +15,20 @@
   addEventListener('pointermove', (e) => {
     mx = e.clientX; my = e.clientY;
     dot.style.transform = 'translate(' + mx + 'px,' + my + 'px) translate(-50%,-50%)';
+    wake();
   });
 
+  // кольцо догоняет точку; догнало — цикл засыпает до следующего движения мыши
+  let running = false;
   function loop() {
     rx += (mx - rx) * 0.16;
     ry += (my - ry) * 0.16;
+    if (Math.abs(mx - rx) < 0.1 && Math.abs(my - ry) < 0.1) { rx = mx; ry = my; running = false; }
     ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px) translate(-50%,-50%)';
-    requestAnimationFrame(loop);
+    if (running) requestAnimationFrame(loop);
   }
-  loop();
+  function wake() { if (!running) { running = true; requestAnimationFrame(loop); } }
+  wake();
 
   // Состояния определяем делегированием — работает и для динамических элементов
   document.addEventListener('pointerover', (e) => {

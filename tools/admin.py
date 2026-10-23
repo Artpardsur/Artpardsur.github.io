@@ -72,6 +72,8 @@ def js_val(v):
     if isinstance(v, list):
         return "[" + ", ".join(js_val(x) for x in v) + "]"
     if isinstance(v, dict):
+        if not v:
+            return "{}"
         return "{ " + ", ".join("%s: %s" % (js_key(k), js_val(x)) for k, x in v.items()) + " }"
     raise TypeError("нельзя записать значение: %r" % (v,))
 
@@ -86,10 +88,31 @@ def obj_line(d, order):
     return "{ " + ", ".join("%s: %s" % (js_key(k), js_val(d[k])) for k in keys) + " }"
 
 
-PROJECT_ORDER = ["id", "media", "mediaContain", "cover", "videoSoon", "name", "type", "roles", "desc", "links"]
+PROJECT_ORDER = ["id", "media", "mediaContain", "cover", "featureMedia", "videoSoon", "name", "type", "roles",
+                 "status", "started", "updated", "desc", "links"]
+
+# Разделы content.js после таймлайна: пишутся как есть, со своими пояснениями
+EXTRA_BLOCKS = [
+    ("announce", "АНОНС: отсчёт на главной. date — момент анонса с часовым поясом,\n"
+                 "     latest — последняя публикация на itch.io (null — не показывать)"),
+    ("now", "СТАТУС: строка «чем занят сейчас» (пусто — блок скрыт)"),
+    ("updates", "ОБНОВЛЕНИЯ САЙТА: последние сверху, показываются первые 4"),
+    ("code", "КОД И МОДЫ: featured — id проектов для большой карточки, mods — моды"),
+]
 TRACK_ORDER = ["id", "project", "file", "title", "genres", "moods", "year"]
 SFX_ITEM_ORDER = ["id", "file", "icon", "name"]
 CONTACT_ORDER = ["id", "icon", "value", "url", "copy"]
+
+
+def block_val(v, indent):
+    """Списки и объекты верхнего уровня — по элементу на строку, вложенное — в строку."""
+    inner = indent + "  "
+    if isinstance(v, list) and any(isinstance(x, (list, dict)) for x in v):
+        return "[\n" + "".join(inner + block_val(x, inner) + ",\n" for x in v) + indent + "]"
+    if isinstance(v, dict) and v and any(isinstance(x, (list, dict)) for x in v.values()):
+        return "{\n" + "".join("%s%s: %s,\n" % (inner, js_key(k), block_val(x, inner))
+                               for k, x in v.items()) + indent + "}"
+    return js_val(v)
 
 
 def project_block(p):
@@ -142,7 +165,7 @@ def serialize_content(c):
         p = dict(p)
         p["name"] = clean_lang_map(p.get("name"))
         p["desc"] = clean_lang_map(p.get("desc"))
-        for k in ("media", "cover"):
+        for k in ("media", "cover", "featureMedia"):
             if not p.get(k):
                 p.pop(k, None)
         for k in ("mediaContain", "videoSoon"):
@@ -192,6 +215,13 @@ def serialize_content(c):
     for tl in c.get("timeline", []):
         L.append("    %s," % obj_line(tl, ["year", "key"]))
     L.append("  ],")
+
+    for key, comment in EXTRA_BLOCKS:
+        if key not in c:
+            continue
+        L.append("")
+        L.append("  /* ---------------- %s ---------------- */" % comment)
+        L.append("  %s: %s," % (key, block_val(c[key], "  ")))
     L.append("};")
     L.append("")
     return "\n".join(L)

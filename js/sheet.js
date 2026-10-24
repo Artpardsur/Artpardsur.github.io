@@ -55,7 +55,7 @@
         b.className = 'sheet-opt' + (o.value === opts.value ? ' active' : '');
         b.setAttribute('data-cursor', 'link');
         const dot = o.img
-          ? '<img class="sheet-thumb" src="' + o.img + '" alt="" loading="lazy">'
+          ? '<span class="sheet-thumb"><img src="' + o.img.src + '" style="' + window.Art.style(o.img) + '" alt="" loading="lazy"></span>'
           : (o.color
             ? '<span class="sheet-dot" style="background:' + o.color + '"></span>'
             : '<span class="sheet-dot sheet-dot-all"></span>');

@@ -132,7 +132,7 @@ window.I18N = {
       'scene.evening': 'Вечер у кинотеатра',
       'code.mods': 'Моды',
       'code.modSoon': 'Подробности — с первым релизом мода.',
-      'tl.hertz': 'Демо «Частоты 17 Герц» в Steam — игра, которую я разрабатываю один',
+      'tl.hertz': 'Демо «Частоты 17 Герц» в Steam — игра, где я единственный программист',
       /* кассеты в «Музыке» — 23.10.2026 */
       'music.tapesHint': 'Листай стрелками и нажми на кассету — включится плеер',
       'music.prevTape': 'Предыдущая кассета',
@@ -258,7 +258,7 @@ window.I18N = {
       'scene.evening': 'Evening at the cinema',
       'code.mods': 'Mods',
       'code.modSoon': 'Details with the mod\'s first release.',
-      'tl.hertz': 'Frequency 17 Hz demo on Steam — a game I develop on my own',
+      'tl.hertz': 'Frequency 17 Hz demo on Steam — a game where I am the only programmer',
       /* кассеты в «Музыке» — 23.10.2026 */
       'music.tapesHint': 'Browse with the arrows and click a cassette to start the player',
       'music.prevTape': 'Previous cassette',
@@ -382,7 +382,7 @@ window.I18N = {
       'scene.evening': 'Tarde en el cine',
       'code.mods': 'Mods',
       'code.modSoon': 'Más detalles con la primera versión del mod.',
-      'tl.hertz': 'Demo de Frecuencia 17 Hz en Steam: un juego que desarrollo yo solo',
+      'tl.hertz': 'Demo de Frecuencia 17 Hz en Steam: un juego en el que soy el único programador',
       /* кассеты в «Музыке» — 23.10.2026 */
       'music.tapesHint': 'Pasa con las flechas y pulsa un casete para abrir el reproductor',
       'music.prevTape': 'Casete anterior',
@@ -506,7 +506,7 @@ window.I18N = {
       'scene.evening': 'Abend am Kino',
       'code.mods': 'Mods',
       'code.modSoon': 'Details mit dem ersten Release des Mods.',
-      'tl.hertz': 'Demo von Frequenz 17 Hz auf Steam – ein Spiel, das ich allein entwickle',
+      'tl.hertz': 'Demo von Frequenz 17 Hz auf Steam – ein Spiel, bei dem ich der einzige Programmierer bin',
       /* кассеты в «Музыке» — 23.10.2026 */
       'music.tapesHint': 'Mit den Pfeilen blättern und eine Kassette anklicken – der Player startet',
       'music.prevTape': 'Vorherige Kassette',
@@ -630,7 +630,7 @@ window.I18N = {
       'scene.evening': 'Soirée au cinéma',
       'code.mods': 'Mods',
       'code.modSoon': 'Détails à la première version du mod.',
-      'tl.hertz': 'Démo de Fréquence 17 Hz sur Steam — un jeu que je développe seul',
+      'tl.hertz': 'Démo de Fréquence 17 Hz sur Steam — un jeu dont je suis le seul programmeur',
       /* кассеты в «Музыке» — 23.10.2026 */
       'music.tapesHint': 'Fais défiler avec les flèches et clique sur une cassette pour lancer le lecteur',
       'music.prevTape': 'Cassette précédente',
@@ -754,7 +754,7 @@ window.I18N = {
       'scene.evening': 'Sera al cinema',
       'code.mods': 'Mod',
       'code.modSoon': 'Dettagli con la prima versione della mod.',
-      'tl.hertz': 'Demo di Frequenza 17 Hz su Steam: un gioco che sviluppo da solo',
+      'tl.hertz': 'Demo di Frequenza 17 Hz su Steam: un gioco di cui sono l’unico programmatore',
       /* кассеты в «Музыке» — 23.10.2026 */
       'music.tapesHint': 'Sfoglia con le frecce e clicca una cassetta per avviare il lettore',
       'music.prevTape': 'Cassetta precedente',
@@ -878,7 +878,7 @@ window.I18N = {
       'scene.evening': 'Noite no cinema',
       'code.mods': 'Mods',
       'code.modSoon': 'Detalhes no primeiro lançamento do mod.',
-      'tl.hertz': 'Demo de Frequência 17 Hz na Steam — um jogo que desenvolvo sozinho',
+      'tl.hertz': 'Demo de Frequência 17 Hz na Steam — um jogo em que sou o único programador',
       /* кассеты в «Музыке» — 23.10.2026 */
       'music.tapesHint': 'Navegue com as setas e clique numa fita para abrir o player',
       'music.prevTape': 'Fita anterior',
@@ -1001,7 +1001,7 @@ window.I18N = {
       'scene.evening': '影院之夜',
       'code.mods': '模组',
       'code.modSoon': '详情将随模组首次发布公布。',
-      'tl.hertz': '《17赫兹频率》试玩版登陆 Steam——一款我独立开发的游戏',
+      'tl.hertz': '《17赫兹频率》试玩版登陆 Steam——我是这款游戏唯一的程序员',
       /* кассеты в «Музыке» — 23.10.2026 */
       'music.tapesHint': '用箭头翻看，点击磁带即可开始播放',
       'music.prevTape': '上一盘磁带',
@@ -1123,7 +1123,7 @@ window.I18N = {
       'scene.evening': '映画館の夜',
       'code.mods': 'MOD',
       'code.modSoon': '詳細は MOD の初回リリースで。',
-      'tl.hertz': '『周波数17ヘルツ』体験版を Steam で公開——ひとりで開発しているゲーム',
+      'tl.hertz': '『周波数17ヘルツ』体験版を Steam で公開——私が唯一のプログラマーを務めるゲーム',
       /* кассеты в «Музыке» — 23.10.2026 */
       'music.tapesHint': '矢印でめくって、カセットをクリックすると再生します',
       'music.prevTape': '前のカセット',

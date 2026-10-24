@@ -307,3 +307,20 @@ pre.out {
 /* календарь в полях даты — светлый значок на тёмном */
 input[type=date], input[type=month] { color-scheme: dark; max-width: 240px; }
 input.bad { border-color: #f43f5e; }
+
+/* ---------- Вкладка «Картинки» ---------- */
+.swatch { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4); }
+.art-card { margin-bottom: 18px; max-width: 1100px; }
+.art-row { display: flex; gap: 26px; align-items: flex-start; flex-wrap: wrap; }
+.art-preview { flex-shrink: 0; padding: 16px; border-radius: 14px; background: #0b0714; border: 1px solid var(--border); }
+.art-controls { flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 10px; }
+.art-seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.art-slider { display: grid; grid-template-columns: 130px 1fr 74px; gap: 10px; align-items: center; font-size: 13.5px; }
+.art-slider input { width: 100%; accent-color: var(--yellow); }
+.art-val { color: var(--yellow); font-variant-numeric: tabular-nums; text-align: right; }
+.art-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.art-chip { width: 26px; height: 26px; border-radius: 7px; border: 2px solid transparent; cursor: pointer; position: relative; }
+.art-chip.on { border-color: #fff; }
+.art-chip.used::after { content: ''; position: absolute; left: 3px; right: 3px; top: 50%; height: 2px; background: rgba(11, 7, 20, 0.75); transform: rotate(-40deg); }
+.art-strip { padding: 12px; border-radius: 12px; background: #0b0714; border: 1px solid var(--border); }
+input[type="color"] { width: 48px; height: 34px; border: 1px solid var(--border); border-radius: 8px; background: none; cursor: pointer; padding: 2px; }

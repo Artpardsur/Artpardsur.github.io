@@ -189,12 +189,6 @@
     pickReset.hidden = !(state.genre || state.mood || state.project);
   }
 
-  // для маленьких миниатюр годится только картинка
-  function projectCover(p) {
-    const c = p.cover || p.media;
-    return (c && !/\.(mp4|webm|mov)$/i.test(c)) ? c : null;
-  }
-
   pickGenre.addEventListener('click', () => {
     window.Sheet.open({
       title: t('music.genreLabel'),
@@ -225,7 +219,7 @@
     const withTracks = C.projects.filter((p) => C.tracks.some((tr) => tr.project === p.id));
     const opts = [{ value: null, label: t('music.anyProject'), count: countWith({ project: null }) }];
     withTracks.forEach((p) => {
-      opts.push({ value: p.id, label: loc(p.name), img: projectCover(p), count: countWith({ project: p.id }) });
+      opts.push({ value: p.id, label: loc(p.name), img: window.Art.get(p, 'pick'), count: countWith({ project: p.id }) });
     });
     if (C.tracks.some((tr) => !tr.project)) {
       opts.push({ value: '__none__', label: t('music.noProject'), count: countWith({ project: '__none__' }) });
@@ -340,10 +334,11 @@
   function buildMixtapes() {
     const withTracks = C.projects.filter((p) => C.tracks.some((tr) => tr.project === p.id));
     withTracks.sort((x, y) => (y.updated || '').localeCompare(x.updated || '') || (y.started || '').localeCompare(x.started || ''));
-    mtList = [{ id: null, name: t('music.allTape'), kind: t('music.allKind'), count: C.tracks.length, img: null }]
+    mtList = [{ id: null, name: t('music.allTape'), kind: t('music.allKind'), count: C.tracks.length, img: null, color: window.Art.ALL_COLOR }]
       .concat(withTracks.map((p) => ({
         id: p.id, name: loc(p.name), kind: t('ptype.' + p.type),
-        count: C.tracks.filter((tr) => tr.project === p.id).length, img: projectCover(p),
+        count: C.tracks.filter((tr) => tr.project === p.id).length, img: window.Art.get(p, 'tape'),
+        color: window.Art.color(p, C.projects.indexOf(p)),
       })));
   }
 
@@ -397,7 +392,7 @@
       b.dataset.i = i;
       b.setAttribute('data-cursor', 'link');
       b.setAttribute('aria-label', m.name + ' — ' + plural(m.count, 'track.count'));
-      b.innerHTML = window.Tape.markup('', window.Tape.colors[i % window.Tape.colors.length], '', false, m.img);
+      b.innerHTML = window.Tape.markup('', m.color, '', false, m.img);
       window.Tape.fill(b, m.name, plural(m.count, 'track.count'));
       // после свайпа браузер присылает ещё и клик — его пропускаем
       b.addEventListener('click', () => { if (Date.now() - swipedAt > 400) chooseMixtape(i); });
@@ -676,14 +671,17 @@
       ).join('');
       // медиа проекта: видео, картинка (для нестандартных пропорций —
       // с размытым фоном из неё же) или типографская обложка
+      // картинку, кадр и масштаб можно поменять во вкладке «Картинки» редактора
       let media = '';
-      if (p.media && p.media.endsWith('.mp4')) {
-        media = '<div class="project-media-wrap"><video class="project-media" src="' + p.media +
-          '" autoplay muted loop playsinline disablepictureinpicture></video></div>';
-      } else if (p.media) {
+      const art = window.Art.get(p, 'card');
+      if (art && window.Art.isVideo(art.src)) {
+        media = '<div class="project-media-wrap"><video class="project-media" src="' + art.src +
+          '" style="' + window.Art.style(art) + '" autoplay muted loop playsinline disablepictureinpicture></video></div>';
+      } else if (art) {
         media = '<div class="project-media-wrap">' +
-          (p.mediaContain ? '<div class="pm-blur" style="background-image:url(\'' + p.media + '\')"></div>' : '') +
-          '<img class="project-media' + (p.mediaContain ? ' pm-contain' : '') + '" src="' + p.media + '" alt="" loading="lazy" width="640" height="360">' +
+          (p.mediaContain ? '<div class="pm-blur" style="background-image:url(\'' + art.src + '\')"></div>' : '') +
+          '<img class="project-media' + (p.mediaContain ? ' pm-contain' : '') + '" src="' + art.src + '" style="' + window.Art.style(art) +
+          '" alt="" loading="lazy" width="640" height="360">' +
           '</div>';
       } else if (p.videoSoon) {
         media = '<div class="project-media-wrap project-media-soon"><span class="pm-icon">🎬</span><span>' + t('projects.videoSoon') + '</span></div>';
@@ -735,11 +733,12 @@
       if (!p) return;
       const card = document.createElement('article');
       card.className = 'feature framed';
+      const fArt = window.Art.get(p, 'feature');
       card.setAttribute('data-anim', 'fade');
       const links = (p.links || []).map((l) =>
         '<a class="btn btn-primary" href="' + l.url + '" target="_blank" rel="noopener" data-cursor="link">' + l.label + ' ↗</a>').join('');
       card.innerHTML =
-        ((p.featureMedia || p.media) ? '<div class="feature-media"><img src="' + (p.featureMedia || p.media) + '" alt="" loading="lazy" width="1280" height="720"></div>' : '') +
+        (fArt ? '<div class="feature-media"><img src="' + fArt.src + '" style="' + window.Art.style(fArt) + '" alt="" loading="lazy" width="1280" height="720"></div>' : '') +
         '<div class="feature-body">' +
         (p.status ? '<span class="project-status st-' + p.status + '"><i class="st-dot"></i>' + t('status.' + p.status) + '</span>' : '') +
         '<h3 class="feature-name"></h3>' +

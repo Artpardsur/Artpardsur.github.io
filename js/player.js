@@ -174,10 +174,9 @@
   /* ---- Обложка ---- */
   const isVideo = (src) => /\.(mp4|webm|mov)$/i.test(src || '');
 
-  // что показать в плеере: обложка проекта, иначе его медиа
+  // что показать в плеере: обложка проекта, иначе его медиа (или своя из «Картинок»)
   function coverFor(project) {
-    if (!project) return null;
-    return project.cover || project.media || null;
+    return window.Art.get(project, 'player');
   }
 
   /* ---- Управление ---- */
@@ -258,8 +257,10 @@
       tagsEl.appendChild(s);
     });
 
-    const cover = coverFor(proj);
+    const art = coverFor(proj);
+    const cover = art && art.src;
     const vid = isVideo(cover);
+    coverImg.style.cssText = coverVid.style.cssText = miniCoverImg.style.cssText = window.Art.style(art);
     // видео-обложка играет в плеере, но в маленький мини-плеер её не тащим
     if (cover && vid) {
       if (!coverVid.src.endsWith(cover)) coverVid.src = cover;

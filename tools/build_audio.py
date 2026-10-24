@@ -15,6 +15,10 @@ SND = r"D:\Портфолио саунд-дизайнера"
 
 MUSIC = {
     "ch-welcome": r"Чернобыль Зона смерти\Добро пожаловать в Зону!.mp3",
+    # исходники не сохранились: вырезаны из записи плейлиста альбома (24.10.2026, +3 дБ)
+    "ch-journey": r"Чернобыль Зона смерти\Путешествие в иное время (из записи).mp3",
+    "ch-lost": r"Чернобыль Зона смерти\Растерянность (из записи).mp3",
+    "ch-back": r"Чернобыль Зона смерти\Обратно в советы (из записи).mp3",
     "gr-trailer": r"Грехопадение\Музыка для трейлера.mp3",
     "gr-memories": r"Грехопадение\Воспоминания.mp3",
     "gr-november": r"Грехопадение\Ноябрьское-утро.mp3",
@@ -36,7 +40,10 @@ MUSIC = {
     "al-lazy": r"Альфа В мире животных\lazy_fun\lazy_fun.ogg",
     "al-katya": r"Альфа В мире животных\katya\katya.ogg",
     "al-katya-thr": r"Альфа В мире животных\katya\katya_threatening.ogg",
+    "al-katya-sad": r"Альфа В мире животных\katya\katya_sad.ogg",
+    "al-dita1": r"Альфа В мире животных\dita\dita1.ogg",
     "al-dita": r"Альфа В мире животных\dita\dita2.ogg",
+    "al-taisiya1": r"Альфа В мире животных\taisiya\taisiya1.ogg",
     "al-taisiya": r"Альфа В мире животных\taisiya\taisiya2.ogg",
     "va-funny": r"Valonabang\funny_hh_jazz\funny_hh_jazz.mp3",
     "va-hhj1": r"Valonabang\hip_hop_jazz\hip_hop_jazz1.mp3",
@@ -54,6 +61,9 @@ MUSIC = {
     "kw-requiem": r"Kwork\Requiem for Hope.wav",
     "kw-whisper": r"Kwork\Whisper of fear.wav",
     "kw-haise": r"Kwork\for Haise993.mp3",
+    # финальные версии заказов Kwork (30.08), а не черновики из рабочей папки
+    "kw-sunny": r"Kwork\Solar Commotion.wav",
+    "kw-steel": r"Kwork\Steel will.wav",
     "ln-1": r"like Little Nightmares\1 (full).mp3",
     "ln-1-1": r"like Little Nightmares\1-1 (full).mp3",
     "ln-2": r"like Little Nightmares\2 (full).mp3",
@@ -115,9 +125,8 @@ MUSIC_2026 = {
     "sl-box": r"Заказ_ЭдКот\финал\Maria — 1. Шкатулка.mp3",
     "sl-waltz": r"Заказ_ЭдКот\финал\Maria — 2. Вальс.mp3",
     "sl-boss": r"Заказ_ЭдКот\финал\Maria — 3. Босс.mp3",
-    # Фриланс: Kwork
-    "kw-sunny": r"Заказ_Kwork\Солнечный_переполох.mp3",
-    "kw-steel": r"Заказ_Kwork\Стальная_воля.mp3",
+    # Фриланс: марш для NWGS (в тегах исходника служебные пометки — поэтому пережимаем)
+    "fr-cyber-march": r"D:\Портфолио композитора\Generation Z - Егор - NWGS\Cybersteel Battalion March.mp3",
     # ВГИК-Дебют
     "vg-forest-rain": r"Минкультура\Наброски\Тема леса — вариант 1 «Дождь» — как в аниматике.mp3",
     "vg-forest-russian": r"Минкультура\Наброски\Тема леса — вариант 2 «Русская» — светлая попевка.mp3",
@@ -133,6 +142,11 @@ MUSIC_2026 = {
     "cl-day": r"D:\Портфолио композитора\Проклятый Удачей\Город_день.mp3",
     "cl-evening": r"D:\Портфолио композитора\Проклятый Удачей\Город_вечер.mp3",
     "cl-rain": r"D:\Портфолио композитора\Проклятый Удачей\Город_дождь.mp3",
+    "cl-god": r"Заказ_брейккор\Пространство_Бога\Пространство Бога.mp3",
+    "cl-god-bad": r"Заказ_брейккор\Пространство_Бога\Пространство Бога (плохая концовка).mp3",
+    "cl-hero-anti": r"Заказ_брейккор\Тема_героя\Герой — антипрайм.mp3",
+    "cl-hero-flex": r"Заказ_брейккор\Тема_героя\Герой — флекс.mp3",
+    "cl-hero-dice": r"Заказ_брейккор\Тема_героя\Герой — бросок кубика.mp3",
     # Иди через лес (папка «Заказ_Тайга»)
     "st-snowdrop": r"Заказ_Тайга\Тайга — станция Подснежник.mp3",
     "st-blueberry": r"Заказ_Тайга\Черничная поляна\Черничная поляна.mp3",

@@ -48,6 +48,7 @@ window.CONTENT = {
         { label: 'МТС Музыка', url: 'https://music.mts.ru/artist/22488483/album/31957504' },
         { label: 'OK', url: 'https://ok.ru/music/album/122959599653669' },
       ],
+      art: { color: '#38bdf8' },
     },
     {
       id: 'grekhopadenie',
@@ -74,17 +75,18 @@ window.CONTENT = {
         { label: 'Steam', url: 'https://store.steampowered.com/app/3140330/Grexopadenie_Pervyj_Akt/' },
         { label: 'VK', url: 'https://vk.com/public208058787' },
       ],
+      art: { color: '#c08497' },
     },
     {
       id: 'howl-growl',
       media: 'media/howl-growl.mp4',
-      cover: 'media/howl-growl.mp4',
+      cover: 'media/howl-growl.jpg',
       name: { ru: 'Howl Growl', en: 'Howl Growl' },
       type: 'vn',
       roles: ['composer', 'sound', 'dev'],
-      status: 'wip',
+      status: 'done',
       started: '2024-11',
-      updated: '2026-10',
+      updated: '2025',
       desc: {
         ru: 'Гибридная визуальная новелла инди-студии Dust Game Studio — амбициозный проект в декорациях России 90-х годов. Для его гнетущей зимней атмосферы я написал музыку и звуковое оформление, а ещё помогал команде как ассистент в разработке.',
         en: 'A hybrid visual novel by indie studio Dust Game Studio — an ambitious project set in 1990s Russia. For its oppressive wintry atmosphere I wrote the music and sound design, and I also helped the team as a development assistant.',
@@ -103,6 +105,7 @@ window.CONTENT = {
         { label: 'DTF', url: 'https://dtf.ru/id1898580' },
         { label: 'Pikabu', url: 'https://pikabu.ru/@EshwardWilliams' },
       ],
+      art: { color: '#cbd5e1', player: { src: 'media/howl-growl.mp4' } },
     },
     {
       id: 'paraselene',
@@ -130,6 +133,7 @@ window.CONTENT = {
         { label: 'itch.io', url: 'https://ladno-team.itch.io/paraselene' },
         { label: 'Telegram', url: 'https://t.me/s/ellilverse' },
       ],
+      art: { color: '#818cf8' },
     },
     {
       id: 'labyrinth',
@@ -159,6 +163,7 @@ window.CONTENT = {
         { label: 'YouTube', url: 'https://youtube.com/@kancentstudio' },
         { label: 'TikTok', url: 'https://www.tiktok.com/@lab_dream' },
       ],
+      art: { color: '#fda4af' },
     },
     {
       id: 'alpha',
@@ -185,6 +190,7 @@ window.CONTENT = {
         { label: 'Telegram', url: 'https://t.me/s/alpha_vmj' },
         { label: 'YouTube', url: 'https://www.youtube.com/channel/UCBHoqWzpyF0-ejNA53NZ6ZA' },
       ],
+      art: { color: '#2dd4bf' },
     },
     {
       id: 'valonabang',
@@ -211,6 +217,7 @@ window.CONTENT = {
         { label: 'Telegram', url: 'https://t.me/valonabang/87' },
         { label: 'VK', url: 'https://vk.com/project_valonabang' },
       ],
+      art: { color: '#f0abfc' },
     },
     {
       id: 'god',
@@ -287,6 +294,7 @@ window.CONTENT = {
       links: [
         { label: 'VK Play', url: 'https://vkplay.ru/play/game/les-pomnit-imena-47550/' },
       ],
+      art: { color: '#cabd5a' },
     },
     {
       id: 'zaoblachny',
@@ -313,6 +321,7 @@ window.CONTENT = {
         { label: 'YouTube', url: 'https://www.youtube.com/@zaoblachymir' },
         { label: 'Telegram', url: 'https://t.me/zaoblachnymir' },
       ],
+      art: { color: '#93c5fd' },
     },
     {
       id: 'hell-empire',
@@ -338,6 +347,7 @@ window.CONTENT = {
       links: [
         { label: 'YouTube', url: 'https://www.youtube.com/@StudBelMat/videos' },
       ],
+      art: { color: '#f87171' },
     },
     {
       id: 'age-of-heroes',
@@ -367,6 +377,7 @@ window.CONTENT = {
         { label: 'YouTube', url: 'https://www.youtube.com/@Aoho_last_war' },
         { label: 'VK', url: 'https://vk.ru/perfectmode_gamedev' },
       ],
+      art: { color: '#d6a77a' },
     },
     {
       id: 'freelance',
@@ -390,6 +401,7 @@ window.CONTENT = {
         ja: '一人ひとりの物語のためのオーダーメイド音楽。Kworkでは「希望のレクイエム」「恐怖のささやき」から「陽だまりの大騒ぎ」「鋼の意志」まで。Little Nightmares の世界観を思わせるインディー作品のための練習曲——子どもの悪夢の世界を描く、不穏できしむ小品たち。そしてソウルライクに着想を得た三部作：オルゴール、ワルツ、ボス戦。',
       },
       links: [],
+      art: { color: '#bef264' },
     },
     {
       id: 'vremennoy-potok',
@@ -423,15 +435,15 @@ window.CONTENT = {
       started: '2026-08',
       updated: '2026-10',
       desc: {
-        ru: "Детективная визуальная новелла о Москве конца 2000-х: Рома приезжает в столицу и оказывается втянут в расследование — по городу расходятся аудиофайлы, после которых люди меняются и исчезают. Здесь я единственный разработчик: собрал игру на Ren'Py по сценарию, поставил сцены и спрайты, написал свои инструменты и подготовил версии для Windows, Mac и Android. В октябре 2026 в Steam вышла демоверсия.",
-        en: "A detective visual novel set in late-2000s Moscow: Roma arrives in the capital and gets drawn into an investigation — audio files are spreading through the city, and people who listen to them change and disappear. I am the sole developer: I built the game in Ren'Py from the script, staged the scenes and sprites, wrote my own tools and prepared builds for Windows, Mac and Android. The demo came out on Steam in October 2026.",
-        es: "Una novela visual detectivesca en el Moscú de finales de los 2000: Roma llega a la capital y se ve envuelto en una investigación: por la ciudad circulan archivos de audio tras los cuales la gente cambia y desaparece. Soy el único desarrollador: construí el juego en Ren'Py a partir del guion, monté escenas y sprites, escribí mis propias herramientas y preparé versiones para Windows, Mac y Android. La demo salió en Steam en octubre de 2026.",
-        de: "Eine Detektiv-Visual-Novel im Moskau der späten 2000er: Roma kommt in die Hauptstadt und gerät in eine Ermittlung – in der Stadt kursieren Audiodateien, nach denen sich Menschen verändern und verschwinden. Ich bin der einzige Entwickler: Ich habe das Spiel nach dem Drehbuch in Ren'Py gebaut, Szenen und Sprites inszeniert, eigene Tools geschrieben und Versionen für Windows, Mac und Android erstellt. Die Demo erschien im Oktober 2026 auf Steam.",
-        fr: "Un visual novel policier dans le Moscou de la fin des années 2000 : Roma arrive dans la capitale et se retrouve mêlé à une enquête — des fichiers audio circulent en ville, et ceux qui les écoutent changent puis disparaissent. J’en suis l’unique développeur : j’ai monté le jeu sous Ren'Py d’après le scénario, mis en scène décors et sprites, écrit mes propres outils et préparé les versions Windows, Mac et Android. La démo est sortie sur Steam en octobre 2026.",
-        it: "Una visual novel investigativa nella Mosca di fine anni 2000: Roma arriva nella capitale e viene coinvolto in un’indagine — in città circolano file audio dopo i quali le persone cambiano e scompaiono. Sono l’unico sviluppatore: ho costruito il gioco in Ren'Py dalla sceneggiatura, curato scene e sprite, scritto i miei strumenti e preparato le versioni per Windows, Mac e Android. La demo è uscita su Steam a ottobre 2026.",
-        pt: "Uma visual novel de detetive na Moscou do fim dos anos 2000: Roma chega à capital e se envolve numa investigação — arquivos de áudio se espalham pela cidade, e quem os ouve muda e desaparece. Sou o único desenvolvedor: montei o jogo em Ren'Py a partir do roteiro, encenei cenas e sprites, escrevi minhas próprias ferramentas e preparei versões para Windows, Mac e Android. A demo saiu na Steam em outubro de 2026.",
-        zh: "一部以2000年代末莫斯科为背景的侦探视觉小说：罗马来到首都，被卷入一场调查——城中流传着一些音频文件，听过的人会改变、然后消失。我是这个项目唯一的开发者：依照剧本用 Ren'Py 搭建游戏，编排场景与立绘，编写自己的工具，并制作了 Windows、Mac 和 Android 版本。试玩版已于2026年10月在 Steam 上线。",
-        ja: "2000年代末のモスクワを舞台にした探偵ビジュアルノベル。首都にやって来たロマは、ある捜査に巻き込まれる——街に出回る音声ファイルを聴いた人々が変わり、消えていくのだ。開発は私ひとり：シナリオをもとに Ren'Py でゲームを組み上げ、シーンと立ち絵を演出し、独自ツールを作り、Windows・Mac・Android 版を用意した。2026年10月に Steam で体験版を公開。",
+        ru: "Детективная визуальная новелла о Москве конца 2000-х: Рома приезжает в столицу и оказывается втянут в расследование — по городу расходятся аудиофайлы, после которых люди меняются и исчезают. Я единственный программист проекта: весь код игры на Ren'Py — мой. Собрал её по сценарию, запрограммировал постановку сцен и спрайтов, написал инструменты для команды и подготовил сборки для Windows, Mac и Android. В октябре 2026 в Steam вышла демоверсия.",
+        en: "A detective visual novel set in late-2000s Moscow: Roma arrives in the capital and gets drawn into an investigation — audio files are spreading through the city, and people who listen to them change and disappear. I am the project's only programmer: all of the game's Ren'Py code is mine. I built it from the script, programmed the staging of scenes and sprites, wrote tools for the team and prepared builds for Windows, Mac and Android. The demo came out on Steam in October 2026.",
+        es: "Una novela visual detectivesca en el Moscú de finales de los 2000: Roma llega a la capital y se ve envuelto en una investigación: por la ciudad circulan archivos de audio tras los cuales la gente cambia y desaparece. Soy el único programador del proyecto: todo el código del juego en Ren'Py es mío. Lo construí a partir del guion, programé la puesta en escena de escenas y sprites, escribí herramientas para el equipo y preparé versiones para Windows, Mac y Android. La demo salió en Steam en octubre de 2026.",
+        de: "Eine Detektiv-Visual-Novel im Moskau der späten 2000er: Roma kommt in die Hauptstadt und gerät in eine Ermittlung – in der Stadt kursieren Audiodateien, nach denen sich Menschen verändern und verschwinden. Ich bin der einzige Programmierer des Projekts: Der gesamte Ren'Py-Code des Spiels stammt von mir. Ich habe es nach dem Drehbuch gebaut, die Inszenierung von Szenen und Sprites programmiert, Tools für das Team geschrieben und Versionen für Windows, Mac und Android erstellt. Die Demo erschien im Oktober 2026 auf Steam.",
+        fr: "Un visual novel policier dans le Moscou de la fin des années 2000 : Roma arrive dans la capitale et se retrouve mêlé à une enquête — des fichiers audio circulent en ville, et ceux qui les écoutent changent puis disparaissent. Je suis le seul programmeur du projet : tout le code Ren'Py du jeu est de moi. Je l’ai monté d’après le scénario, programmé la mise en scène des décors et des sprites, écrit des outils pour l’équipe et préparé les versions Windows, Mac et Android. La démo est sortie sur Steam en octobre 2026.",
+        it: "Una visual novel investigativa nella Mosca di fine anni 2000: Roma arriva nella capitale e viene coinvolto in un’indagine — in città circolano file audio dopo i quali le persone cambiano e scompaiono. Sono l’unico programmatore del progetto: tutto il codice Ren'Py del gioco è mio. L’ho costruito dalla sceneggiatura, ho programmato la messa in scena di scene e sprite, scritto strumenti per il team e preparato le versioni per Windows, Mac e Android. La demo è uscita su Steam a ottobre 2026.",
+        pt: "Uma visual novel de detetive na Moscou do fim dos anos 2000: Roma chega à capital e se envolve numa investigação — arquivos de áudio se espalham pela cidade, e quem os ouve muda e desaparece. Sou o único programador do projeto: todo o código Ren'Py do jogo é meu. Montei-o a partir do roteiro, programei a encenação de cenas e sprites, escrevi ferramentas para a equipe e preparei versões para Windows, Mac e Android. A demo saiu na Steam em outubro de 2026.",
+        zh: "一部以2000年代末莫斯科为背景的侦探视觉小说：罗马来到首都，被卷入一场调查——城中流传着一些音频文件，听过的人会改变、然后消失。我是这个项目唯一的程序员：游戏的全部 Ren'Py 代码都出自我手。我依照剧本搭建游戏，用代码编排场景与立绘，为团队编写工具，并制作了 Windows、Mac 和 Android 版本。试玩版已于2026年10月在 Steam 上线。",
+        ja: "2000年代末のモスクワを舞台にした探偵ビジュアルノベル。首都にやって来たロマは、ある捜査に巻き込まれる——街に出回る音声ファイルを聴いた人々が変わり、消えていくのだ。私はこのプロジェクト唯一のプログラマー：ゲームの Ren'Py コードはすべて私が書いた。シナリオをもとにゲームを組み上げ、シーンと立ち絵の演出をプログラムし、チーム用のツールを作り、Windows・Mac・Android 版を用意した。2026年10月に Steam で体験版を公開。",
       },
       links: [
         { label: 'Steam', url: 'https://store.steampowered.com/app/4940170/' },
@@ -459,6 +471,7 @@ window.CONTENT = {
         ja: 'ロシア連邦文化省の資金援助を受けて制作された、プロダクションセンター「VGIKデビュー」のアニメーション映画のための音楽。主要テーマのさまざまな解釈を収録：雨の版からワルツまで森のテーマ5種、オークのテーマ3種、そして映画全体のための組曲。',
       },
       links: [],
+      art: { color: '#a78bfa' },
     },
     {
       id: 'cursed-luck',
@@ -470,15 +483,15 @@ window.CONTENT = {
       started: '2026-08',
       updated: '2026-10',
       desc: {
-        ru: 'Визуальная новелла IGB Team, где каждый выбор решает бросок кубика. Герой проклял Бога за невезение и попал в Тестовую сцену — гротескный черновик мира, где живут биороботы, а самой удачи не существует. Для этого коллажного мира я пишу брейккор: затишье перед бурей и город днём, вечером и под дождём.',
-        en: 'A visual novel by IGB Team where every choice comes down to a dice roll. The hero cursed God for his bad luck and ended up in the Test Scene — a grotesque draft of a world inhabited by bioroids, where luck itself does not exist. For this collage world I write breakcore: the lull before the storm and the city by day, by evening and in the rain.',
-        es: 'Una novela visual de IGB Team donde cada elección depende de una tirada de dado. El héroe maldijo a Dios por su mala suerte y acabó en la Escena de Prueba, un grotesco borrador de mundo habitado por biorrobots donde la suerte no existe. Para este mundo de collage escribo breakcore: la calma antes de la tormenta y la ciudad de día, al atardecer y bajo la lluvia.',
-        de: 'Eine Visual Novel von IGB Team, in der jede Entscheidung ein Würfelwurf ist. Der Held verfluchte Gott für sein Pech und landete in der Testszene – einem grotesken Weltentwurf voller Bioroboter, in dem es Glück schlicht nicht gibt. Für diese Collagenwelt schreibe ich Breakcore: die Ruhe vor dem Sturm und die Stadt bei Tag, am Abend und im Regen.',
-        fr: 'Un visual novel d’IGB Team où chaque choix se joue aux dés. Le héros a maudit Dieu pour sa malchance et s’est retrouvé dans la Scène de test — un brouillon de monde grotesque peuplé de biorobots, où la chance n’existe pas. Pour cet univers en collage j’écris du breakcore : le calme avant la tempête et la ville le jour, le soir et sous la pluie.',
-        it: 'Una visual novel di IGB Team in cui ogni scelta dipende da un tiro di dado. L’eroe ha maledetto Dio per la sua sfortuna ed è finito nella Scena di prova, una grottesca bozza di mondo abitata da biorobot dove la fortuna non esiste. Per questo mondo a collage scrivo breakcore: la quiete prima della tempesta e la città di giorno, di sera e sotto la pioggia.',
-        pt: 'Uma visual novel da IGB Team em que cada escolha depende de um lance de dado. O herói amaldiçoou Deus pelo azar e foi parar na Cena de Teste — um rascunho grotesco de mundo habitado por biorrobôs, onde a sorte não existe. Para esse mundo de colagem escrevo breakcore: a calmaria antes da tempestade e a cidade de dia, à noite e na chuva.',
-        zh: 'IGB Team 的视觉小说，每个选择都由一次掷骰决定。主角因自己的霉运诅咒了神，结果被送进“测试场景”——一个荒诞的世界草稿，住着生化机器人，而“运气”本身并不存在。我为这个拼贴风格的世界创作碎核音乐：风暴前的平静，以及白天、傍晚和雨中的城市。',
-        ja: 'すべての選択がサイコロの一振りで決まる、IGB Team のビジュアルノベル。不運を嘆いて神を呪った主人公は「テストシーン」へ——バイオロボットが暮らし、運というものが存在しないグロテスクな世界の下書きに送られる。このコラージュの世界のために、私はブレイクコアを書いている：嵐の前の静けさ、そして昼・夕方・雨の街。',
+        ru: 'Визуальная новелла IGB Team, где каждый выбор решает бросок кубика. Герой проклял Бога за невезение и попал в Тестовую сцену — гротескный черновик мира, где живут биороботы, а самой удачи не существует. Для этого коллажного мира я пишу брейккор: затишье перед бурей, город днём, вечером и под дождём, Пространство Бога (с отдельной версией для плохой концовки) и тему героя в нескольких вариантах.',
+        en: 'A visual novel by IGB Team where every choice comes down to a dice roll. The hero cursed God for his bad luck and ended up in the Test Scene — a grotesque draft of a world inhabited by bioroids, where luck itself does not exist. For this collage world I write breakcore: the lull before the storm, the city by day, by evening and in the rain, God’s Space (with a separate bad-ending version) and the hero’s theme in several variations.',
+        es: 'Una novela visual de IGB Team donde cada elección depende de una tirada de dado. El héroe maldijo a Dios por su mala suerte y acabó en la Escena de Prueba, un grotesco borrador de mundo habitado por biorrobots donde la suerte no existe. Para este mundo de collage escribo breakcore: la calma antes de la tormenta, la ciudad de día, al atardecer y bajo la lluvia, el Espacio de Dios (con una versión aparte para el final malo) y el tema del héroe en varias variantes.',
+        de: 'Eine Visual Novel von IGB Team, in der jede Entscheidung ein Würfelwurf ist. Der Held verfluchte Gott für sein Pech und landete in der Testszene – einem grotesken Weltentwurf voller Bioroboter, in dem es Glück schlicht nicht gibt. Für diese Collagenwelt schreibe ich Breakcore: die Ruhe vor dem Sturm, die Stadt bei Tag, am Abend und im Regen, den Raum Gottes (mit eigener Version für das schlechte Ende) und das Heldenthema in mehreren Varianten.',
+        fr: 'Un visual novel d’IGB Team où chaque choix se joue aux dés. Le héros a maudit Dieu pour sa malchance et s’est retrouvé dans la Scène de test — un brouillon de monde grotesque peuplé de biorobots, où la chance n’existe pas. Pour cet univers en collage j’écris du breakcore : le calme avant la tempête, la ville le jour, le soir et sous la pluie, l’Espace de Dieu (avec une version pour la mauvaise fin) et le thème du héros en plusieurs variantes.',
+        it: 'Una visual novel di IGB Team in cui ogni scelta dipende da un tiro di dado. L’eroe ha maledetto Dio per la sua sfortuna ed è finito nella Scena di prova, una grottesca bozza di mondo abitata da biorobot dove la fortuna non esiste. Per questo mondo a collage scrivo breakcore: la quiete prima della tempesta, la città di giorno, di sera e sotto la pioggia, lo Spazio di Dio (con una versione per il finale cattivo) e il tema dell’eroe in più varianti.',
+        pt: 'Uma visual novel da IGB Team em que cada escolha depende de um lance de dado. O herói amaldiçoou Deus pelo azar e foi parar na Cena de Teste — um rascunho grotesco de mundo habitado por biorrobôs, onde a sorte não existe. Para esse mundo de colagem escrevo breakcore: a calmaria antes da tempestade, a cidade de dia, à noite e na chuva, o Espaço de Deus (com uma versão para o final ruim) e o tema do herói em várias variações.',
+        zh: 'IGB Team 的视觉小说，每个选择都由一次掷骰决定。主角因自己的霉运诅咒了神，结果被送进“测试场景”——一个荒诞的世界草稿，住着生化机器人，而“运气”本身并不存在。我为这个拼贴风格的世界创作碎核音乐：风暴前的平静，白天、傍晚和雨中的城市，“神之空间”（另有坏结局版本），以及多个版本的主角主题。',
+        ja: 'すべての選択がサイコロの一振りで決まる、IGB Team のビジュアルノベル。不運を嘆いて神を呪った主人公は「テストシーン」へ——バイオロボットが暮らし、運というものが存在しないグロテスクな世界の下書きに送られる。このコラージュの世界のために、私はブレイクコアを書いている：嵐の前の静けさ、昼・夕暮れ・雨の街、「神の空間」（バッドエンド版つき）、そして主人公のテーマのいくつかのバリエーション。',
       },
       links: [
         { label: 'Сайт IGB Team', url: 'https://sites.google.com/view/igb-team/главная' },
@@ -487,6 +500,7 @@ window.CONTENT = {
         { label: 'VK', url: 'https://vk.com/igb_team' },
         { label: 'Telegram', url: 'https://t.me/igb_team' },
       ],
+      art: { color: '#67e8f9' },
     },
     {
       id: 'station',
@@ -511,6 +525,7 @@ window.CONTENT = {
       links: [
         { label: 'Telegram', url: 'https://t.me/station_TO' },
       ],
+      art: { color: '#86efac' },
     },
     {
       id: 'flesh',
@@ -539,12 +554,16 @@ window.CONTENT = {
         { label: 'VK Play', url: 'https://vkplay.ru/play/game/the-rabbit-creation-of-the-mind-44768/' },
         { label: 'Telegram', url: 'https://t.me/s/rabbitofthemind' },
       ],
+      art: { color: '#fb923c' },
     },
   ],
 
   /* ---------------- ТРЕКИ ---------------- */
   tracks: [
     { id: 'ch-welcome', project: 'chernobyl', file: 'audio/music/ch-welcome.mp3', title: { ru: 'Добро пожаловать в Зону!', en: 'Welcome to the Zone!' }, genres: ['dark', 'ambient', 'electronic'], moods: ['tense', 'cozy'] },
+    { id: 'ch-journey', project: 'chernobyl', file: 'audio/music/ch-journey.mp3', title: { ru: 'Путешествие в иное время', en: 'Journey to Another Time' }, genres: ['ambient', 'electronic'], moods: ['calm', 'tense'] },
+    { id: 'ch-lost', project: 'chernobyl', file: 'audio/music/ch-lost.mp3', title: { ru: 'Растерянность', en: 'Confusion' }, genres: ['ambient', 'dark'], moods: ['sad', 'calm'] },
+    { id: 'ch-back', project: 'chernobyl', file: 'audio/music/ch-back.mp3', title: { ru: 'Обратно в советы', en: 'Back to the Soviets' }, genres: ['dark', 'ambient', 'electronic'], moods: ['tense', 'sad'] },
     { id: 'gr-trailer', project: 'grekhopadenie', file: 'audio/music/gr-trailer.mp3', title: { ru: 'Музыка для трейлера', en: 'Trailer Music' }, genres: ['orchestral'], moods: ['epic', 'tense', 'calm'] },
     { id: 'gr-memories', project: 'grekhopadenie', file: 'audio/music/gr-memories.mp3', title: { ru: 'Воспоминания', en: 'Memories' }, genres: ['orchestral'], moods: ['sad', 'calm'] },
     { id: 'gr-november', project: 'grekhopadenie', file: 'audio/music/gr-november.mp3', title: { ru: 'Ноябрьское утро', en: 'November Morning' }, genres: ['orchestral'], moods: ['calm', 'sad'] },
@@ -567,8 +586,11 @@ window.CONTENT = {
     { id: 'al-lazy', project: 'alpha', file: 'audio/music/al-lazy.mp3', title: { ru: 'Ленивое веселье', en: 'Lazy Fun' }, genres: ['lofi'], moods: ['happy', 'cozy', 'calm'] },
     { id: 'al-katya', project: 'alpha', file: 'audio/music/al-katya.mp3', title: { ru: 'Тема Кати', en: "Katya's Theme" }, genres: ['orchestral'], moods: ['calm'] },
     { id: 'al-katya-thr', project: 'alpha', file: 'audio/music/al-katya-thr.mp3', title: { ru: 'Катя: угроза', en: 'Katya: Threat' }, genres: ['orchestral'], moods: ['tense', 'happy'] },
-    { id: 'al-dita', project: 'alpha', file: 'audio/music/al-dita.mp3', title: { ru: 'Тема Диты', en: "Dita's Theme" }, genres: ['orchestral'], moods: ['calm'] },
-    { id: 'al-taisiya', project: 'alpha', file: 'audio/music/al-taisiya.mp3', title: { ru: 'Тема Таисии', en: "Taisiya's Theme" }, genres: ['rock'], moods: ['calm', 'epic'] },
+    { id: 'al-katya-sad', project: 'alpha', file: 'audio/music/al-katya-sad.mp3', title: { ru: 'Катя: грусть', en: 'Katya: Sadness' }, genres: ['orchestral'], moods: ['sad', 'calm'] },
+    { id: 'al-dita1', project: 'alpha', file: 'audio/music/al-dita1.mp3', title: { ru: 'Тема Диты', en: "Dita's Theme" }, genres: ['orchestral'], moods: ['happy', 'cozy'] },
+    { id: 'al-dita', project: 'alpha', file: 'audio/music/al-dita.mp3', title: { ru: 'Дита: другая сторона', en: 'Dita: The Other Side' }, genres: ['orchestral', 'rock'], moods: ['calm', 'tense'] },
+    { id: 'al-taisiya1', project: 'alpha', file: 'audio/music/al-taisiya1.mp3', title: { ru: 'Тема Таисии', en: "Taisiya's Theme" }, genres: ['orchestral'], moods: ['happy', 'tense'] },
+    { id: 'al-taisiya', project: 'alpha', file: 'audio/music/al-taisiya.mp3', title: { ru: 'Таисия: всерьёз', en: 'Taisiya: For Real' }, genres: ['rock', 'dark'], moods: ['tense', 'epic'] },
     { id: 'va-funny', project: 'valonabang', file: 'audio/music/va-funny.mp3', title: { ru: 'Funny Hip-Hop Jazz', en: 'Funny Hip-Hop Jazz' }, genres: ['jazz', 'lofi'], moods: ['happy'] },
     { id: 'va-hhj1', project: 'valonabang', file: 'audio/music/va-hhj1.mp3', title: { ru: 'Hip-Hop Jazz I', en: 'Hip-Hop Jazz I' }, genres: ['jazz', 'lofi'], moods: ['cozy', 'calm'] },
     { id: 'va-lofi', project: 'valonabang', file: 'audio/music/va-lofi.mp3', title: { ru: 'Simple Lo-fi', en: 'Simple Lo-fi' }, genres: ['lofi'], moods: ['calm', 'cozy'] },
@@ -580,8 +602,6 @@ window.CONTENT = {
     { id: 'he-overdrive', project: 'hell-empire', file: 'audio/music/he-overdrive.mp3', title: { ru: 'С перегрузом', en: 'Overdriven' }, genres: ['rock', 'dark'], moods: ['epic', 'tense'] },
     { id: 'les-winter', project: 'les', file: 'audio/music/les-winter.mp3', title: { ru: 'The Darkest Winter', en: 'The Darkest Winter' }, genres: ['ambient'], moods: ['sad', 'calm'] },
     { id: 'aoh-3', project: 'age-of-heroes', file: 'audio/music/aoh-3.mp3', title: { ru: 'Age of Heroes III', en: 'Age of Heroes III' }, genres: ['orchestral', 'electronic'], moods: ['epic', 'happy'] },
-    { id: 'nw-menu', project: null, file: 'audio/music/nw-menu.mp3', title: { ru: 'Главное меню', en: 'Main Menu Theme' }, genres: ['orchestral'], moods: ['calm', 'sad'] },
-    { id: 'nw-theme4', project: null, file: 'audio/music/nw-theme4.mp3', title: { ru: 'Тема IV', en: 'Theme IV' }, genres: ['electronic', 'dark'], moods: ['tense', 'epic'] },
     { id: 'kw-requiem', project: 'freelance', file: 'audio/music/kw-requiem.mp3', title: { ru: 'Requiem for Hope', en: 'Requiem for Hope' }, genres: ['orchestral'], moods: ['sad', 'epic', 'calm'] },
     { id: 'kw-whisper', project: 'freelance', file: 'audio/music/kw-whisper.mp3', title: { ru: 'Whisper of Fear', en: 'Whisper of Fear' }, genres: ['dark', 'ambient', 'orchestral'], moods: ['tense', 'calm'] },
     { id: 'kw-haise', project: 'freelance', file: 'audio/music/kw-haise.mp3', title: { ru: 'For Haise993', en: 'For Haise993' }, genres: ['ambient'], moods: ['calm', 'cozy'] },
@@ -594,6 +614,9 @@ window.CONTENT = {
     { id: 'sl-boss', project: 'freelance', file: 'audio/music/sl-boss.mp3', title: { ru: 'Битва с боссом', en: 'Boss Fight' }, genres: ['orchestral', 'dark'], moods: ['epic', 'tense'], year: 2026 },
     { id: 'kw-sunny', project: 'freelance', file: 'audio/music/kw-sunny.mp3', title: { ru: 'Солнечный переполох', en: 'Solar Commotion' }, genres: ['electronic'], moods: ['happy'], year: 2026 },
     { id: 'kw-steel', project: 'freelance', file: 'audio/music/kw-steel.mp3', title: { ru: 'Стальная воля', en: 'Steel Will' }, genres: ['rock', 'electronic'], moods: ['epic', 'tense'], year: 2026 },
+    { id: 'nw-menu', project: 'freelance', file: 'audio/music/nw-menu.mp3', title: { ru: 'Тишина перед бурей', en: 'Calm Before the Storm' }, genres: ['orchestral'], moods: ['calm', 'sad'], year: 2026 },
+    { id: 'nw-theme4', project: 'freelance', file: 'audio/music/nw-theme4.mp3', title: { ru: 'Короткое замыкание', en: 'Short Circuit' }, genres: ['electronic', 'dark'], moods: ['tense', 'epic'], year: 2026 },
+    { id: 'fr-cyber-march', project: 'freelance', file: 'audio/music/fr-cyber-march.mp3', title: { ru: 'Марш кибер-стального батальона', en: 'Cybersteel Battalion March' }, genres: ['orchestral', 'electronic', 'rock'], moods: ['epic', 'tense'], year: 2026 },
     { id: 'vg-forest-rain', project: 'vgik', file: 'audio/music/vg-forest-rain.mp3', title: { ru: 'Тема леса · Дождь', en: 'Forest Theme · Rain' }, genres: ['orchestral'], moods: ['calm', 'sad'], year: 2026 },
     { id: 'vg-forest-russian', project: 'vgik', file: 'audio/music/vg-forest-russian.mp3', title: { ru: 'Тема леса · Русская', en: 'Forest Theme · Russian' }, genres: ['orchestral'], moods: ['happy', 'cozy'], year: 2026 },
     { id: 'vg-forest-song', project: 'vgik', file: 'audio/music/vg-forest-song.mp3', title: { ru: 'Тема леса · Песня', en: 'Forest Theme · Song' }, genres: ['orchestral'], moods: ['calm', 'cozy'], year: 2026 },
@@ -607,6 +630,11 @@ window.CONTENT = {
     { id: 'cl-day', project: 'cursed-luck', file: 'audio/music/cl-day.mp3', title: { ru: 'Город: день', en: 'City: Day' }, genres: ['electronic'], moods: ['happy', 'tense'], year: 2026 },
     { id: 'cl-evening', project: 'cursed-luck', file: 'audio/music/cl-evening.mp3', title: { ru: 'Город: вечер', en: 'City: Evening' }, genres: ['electronic'], moods: ['calm', 'tense'], year: 2026 },
     { id: 'cl-rain', project: 'cursed-luck', file: 'audio/music/cl-rain.mp3', title: { ru: 'Город: дождь', en: 'City: Rain' }, genres: ['electronic'], moods: ['sad', 'tense'], year: 2026 },
+    { id: 'cl-god', project: 'cursed-luck', file: 'audio/music/cl-god.mp3', title: { ru: 'Пространство Бога', en: "God's Space" }, genres: ['electronic', 'ambient'], moods: ['calm', 'epic'], year: 2026 },
+    { id: 'cl-god-bad', project: 'cursed-luck', file: 'audio/music/cl-god-bad.mp3', title: { ru: 'Пространство Бога: плохая концовка', en: "God's Space: Bad Ending" }, genres: ['electronic', 'dark'], moods: ['sad', 'tense'], year: 2026 },
+    { id: 'cl-hero-anti', project: 'cursed-luck', file: 'audio/music/cl-hero-anti.mp3', title: { ru: 'Тема героя: антипрайм', en: 'Hero Theme: Anti-Prime' }, genres: ['electronic'], moods: ['sad', 'tense'], year: 2026 },
+    { id: 'cl-hero-flex', project: 'cursed-luck', file: 'audio/music/cl-hero-flex.mp3', title: { ru: 'Тема героя: флекс', en: 'Hero Theme: Flex' }, genres: ['electronic'], moods: ['happy', 'epic'], year: 2026 },
+    { id: 'cl-hero-dice', project: 'cursed-luck', file: 'audio/music/cl-hero-dice.mp3', title: { ru: 'Тема героя: бросок кубика', en: 'Hero Theme: Dice Roll' }, genres: ['electronic'], moods: ['happy'], year: 2026 },
     { id: 'st-snowdrop', project: 'station', file: 'audio/music/st-snowdrop.mp3', title: { ru: 'Станция «Подснежник»', en: 'Snowdrop Station' }, genres: ['ambient', 'orchestral'], moods: ['calm', 'cozy'], year: 2026 },
     { id: 'st-blueberry', project: 'station', file: 'audio/music/st-blueberry.mp3', title: { ru: 'Черничная поляна', en: 'Blueberry Glade' }, genres: ['ambient'], moods: ['happy', 'cozy'], year: 2026 },
     { id: 'st-night-tracks', project: 'station', file: 'audio/music/st-night-tracks.mp3', title: { ru: 'Ночной лес · Следы', en: 'Night Forest · Tracks' }, genres: ['ambient', 'dark'], moods: ['tense', 'calm'], year: 2026 },
@@ -734,6 +762,10 @@ window.CONTENT = {
 
   /* ---------------- ОБНОВЛЕНИЯ САЙТА: последние сверху, показываются первые 4 ---------------- */
   updates: [
+    {
+      date: '2026-10-24',
+      text: { ru: 'Новая музыка: «Пространство Бога» и тема героя, все темы «Альфы», ещё три трека «Чернобыля», марш и Project Z во фрилансе', en: 'New music: God’s Space and the hero theme, all Alpha themes, three more Chernobyl tracks, a march and Project Z in freelance' },
+    },
     {
       date: '2026-10-23',
       text: { ru: 'Новые проекты: «Частота 17 Герц», ВГИК-Дебют, «Проклятый удачей», «Иди через лес»', en: 'New projects: Frequency 17 Hz, VGIK-Debut, Cursed by Luck, Walk Through the Forest' },

@@ -138,15 +138,18 @@
       '<linearGradient id="dBeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9adcf0" stop-opacity=".28"/><stop offset="1" stop-color="#9adcf0" stop-opacity="0"/></linearGradient>' +
       '<radialGradient id="dTorch"><stop offset="0" stop-color="#fb923c" stop-opacity=".75"/><stop offset="1" stop-color="#fb923c" stop-opacity="0"/></radialGradient>' +
       '<radialGradient id="dShade" cx=".5" cy=".45" r=".75"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".7"/></radialGradient>' +
+      '<clipPath id="dWin"><path d="M860 212V140a75 60 0 0 1 150 0V212z"/></clipPath>' +
       '</defs>' +
       '<rect width="1200" height="520" fill="url(#dBrick)"/>';
-    // окно с решёткой, лунный луч и вспышка грозы
+    // окно с решёткой, лунный луч и вспышка грозы. Небо и молния — за решёткой
+    // и обрезаны по арке (dWin), прутья доходят до рамы
     s += '<polygon points="852,212 1018,212 1110,520 760,520" fill="url(#dBeam)"/>' +
-      '<g data-spot="par-wind"><path d="M860 212V140a75 60 0 0 1 150 0V212z" fill="#24485a"/>' +
-      stars(r, 10, 60, '#e6f6ff', true).replace(/cy="([\d.]+)"/g, (m, y) => 'cy="' + f1(100 + Number(y)) + '"').replace(/cx="([\d.]+)"/g, (m, x) => 'cx="' + f1(870 + Number(x) / 9) + '"') +
-      '<path d="M890 100V212M920 84V212M950 84V212M980 100V212M860 160H1010" stroke="#071015" stroke-width="8"/></g>' +
-      '<g data-spot="par-thunder"><path class="flash" d="M860 212V140a75 60 0 0 1 150 0V212z" fill="#e6f6ff"/>' +
-      '<path class="flash" d="M948 70l-18 50h16l-14 44 34-60h-18l14-34z" fill="#fff"/></g>';
+      '<g data-spot="par-wind" clip-path="url(#dWin)"><path d="M860 212V140a75 60 0 0 1 150 0V212z" fill="#24485a"/>' +
+      stars(r, 10, 60, '#e6f6ff', true).replace(/cy="([\d.]+)"/g, (m, y) => 'cy="' + f1(100 + Number(y)) + '"').replace(/cx="([\d.]+)"/g, (m, x) => 'cx="' + f1(870 + Number(x) / 9) + '"') + '</g>' +
+      '<g data-spot="par-thunder" clip-path="url(#dWin)"><path class="flash" d="M860 212V140a75 60 0 0 1 150 0V212z" fill="#9fd4ee" fill-opacity=".45"/>' +
+      '<path class="flash" d="M948 92l-18 50h16l-14 44 34-60h-18l14-34z" fill="#fff"/></g>' +
+      '<path d="M890 70V212M920 70V212M950 70V212M980 70V212M860 160H1010" stroke="#071015" stroke-width="8" clip-path="url(#dWin)"/>' +
+      '<path d="M860 212V140a75 60 0 0 1 150 0V212" stroke="#071015" stroke-width="8" fill="none"/>';
     // дверь камеры с засовом
     s += '<g data-spot="par-door"><path d="M118 432V230a86 70 0 0 1 172 0V432z" fill="#2a1d14"/>' +
       '<path d="M146 432V200M176 432V176M206 432V168M236 432V176M262 432V196" stroke="#1a110b" stroke-width="4"/>' +
@@ -384,17 +387,23 @@
   });
 
   /* ---------- Кассеты ---------- */
-  const TAPE_COLORS = ['#ffd60a', '#a78bfa', '#67e8f9', '#fb923c', '#f0abfc', '#86efac', '#fda4af', '#fde68a'];
   let tapeIndex = 0;
 
-  // кассета: корпус, винты, наклейка (по желанию — кружок с обложкой), окошко с катушками, низ
+  // цвет кассеты звуков — как у кассеты музыки того же проекта
+  function sfxColor(g, i) {
+    return window.Art.color(C.projects.find((p) => p.id === g.project), i);
+  }
+
+  // кассета: корпус, винты, этикетка с окошком и катушками, низ; по желанию —
+  // кружок с обложкой (img из Art.get) в правом верхнем углу, над катушкой
   function tapeMarkup(title, color, sub, big, img) {
-    return '<span class="tape' + (big ? ' tape-big' : '') + '" style="--tc:' + color + '">' +
+    return '<span class="tape' + (big ? ' tape-big' : '') + (img ? ' has-sticker' : '') + '" style="--tc:' + color +
+      (img ? ';--ss:' + img.size : '') + '">' +
       '<span class="tape-screw s1"></span><span class="tape-screw s2"></span><span class="tape-screw s3"></span><span class="tape-screw s4"></span>' +
       '<span class="tape-label"><span class="tape-side">A</span><span class="tape-title"></span><span class="tape-sub"></span>' +
-      (img ? '<span class="tape-sticker" style="background-image:url(&quot;' + img + '&quot;)"></span>' : '') +
       '<span class="tape-window"><span class="tape-reel l"><span class="tape-hub"></span></span>' +
       '<span class="tape-film"></span><span class="tape-reel r"><span class="tape-hub"></span></span></span></span>' +
+      (img ? '<span class="tape-sticker" style="' + window.Art.style(img) + '"><img src="' + img.src + '" alt="" loading="lazy"></span>' : '') +
       '<span class="tape-foot"><i></i><i></i><i></i><i></i></span></span>';
   }
   function fillTape(el, title, sub) {
@@ -410,7 +419,7 @@
       b.className = 'tape-btn' + (i === tapeIndex ? ' active' : '');
       b.setAttribute('aria-pressed', i === tapeIndex ? 'true' : 'false');
       b.setAttribute('data-cursor', 'link');
-      b.innerHTML = tapeMarkup('', TAPE_COLORS[i % TAPE_COLORS.length], '', false) + '<span class="tape-count"></span>';
+      b.innerHTML = tapeMarkup('', sfxColor(g, i), '', false) + '<span class="tape-count"></span>';
       fillTape(b, projectName(g.project), 'Pardus · SFX');
       b.querySelector('.tape-count').textContent = plural(g.items.length, 'sound.count');
       b.addEventListener('click', () => {
@@ -434,7 +443,7 @@
     const g = C.sfx[tapeIndex];
     if (!g) return;
     const slot = document.getElementById('deckSlot');
-    slot.innerHTML = tapeMarkup('', TAPE_COLORS[tapeIndex % TAPE_COLORS.length], '', true);
+    slot.innerHTML = tapeMarkup('', sfxColor(g, tapeIndex), '', true);
     fillTape(slot, projectName(g.project), plural(g.items.length, 'sound.count'));
     if (insert && !reduced) { slot.classList.remove('inserting'); void slot.offsetWidth; slot.classList.add('inserting'); }
     document.getElementById('deckLabel').textContent = t('sound.inDeck') + ': ' + projectName(g.project);
@@ -487,7 +496,7 @@
 
   listeners.push(updateScene, updateDeck);
 
-  window.Tape = { markup: tapeMarkup, fill: fillTape, colors: TAPE_COLORS };
+  window.Tape = { markup: tapeMarkup, fill: fillTape };
 
   window.Sound = {
     render() {

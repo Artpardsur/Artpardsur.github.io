@@ -281,16 +281,17 @@
 
     const search = h('input', { class: 'search', type: 'text', placeholder: 'Поиск…', value: filter });
     search.addEventListener('input', () => { filter = search.value; renderSide(); });
-    const addBtn = h('button', { class: 'btn small primary', text: '+ Добавить', onclick: addItem });
+    const addBtn = tab === 'art' ? null : h('button', { class: 'btn small primary', text: '+ Добавить', onclick: addItem });
     side.append(h('div', { class: 'side-tools' }, search, addBtn));
 
     const q = filter.trim().toLowerCase();
     const hit = (s) => !q || String(s || '').toLowerCase().includes(q);
 
-    if (tab === 'projects') {
+    if (tab === 'projects' || tab === 'art') {
       C.projects.forEach((p, i) => {
         if (!hit(p.name && p.name.ru) && !hit(p.id)) return;
         const cover = coverOf(p);
+        const nTracks = C.tracks.filter((t) => t.project === p.id).length;
         side.append(h('button', {
           class: 'item' + (sel.projects === i ? ' active' : ''),
           onclick: () => { sel.projects = i; render(); },
@@ -299,7 +300,9 @@
             : h('div', { class: 'item-thumb', text: '▦' }),
           h('div', { class: 'item-main' },
             h('div', { class: 'item-name', text: (p.name && p.name.ru) || p.id }),
-            h('div', { class: 'item-sub', text: ru('ptype.' + p.type) + ' · ' + p.id }))));
+            h('div', { class: 'item-sub', text: tab === 'art'
+              ? (nTracks ? 'кассета · ' + nTracks + ' тр.' : 'без кассеты') : ru('ptype.' + p.type) + ' · ' + p.id })),
+          tab === 'art' && nTracks ? h('span', { class: 'swatch', style: 'background:' + window.Art.color(p, i) }) : null));
       });
     }
 
@@ -395,6 +398,7 @@
     if (tab === 'stats') return renderNumbers(edit);
     if (tab === 'home') return renderHome(edit);
     if (tab === 'projects') return renderProject(edit);
+    if (tab === 'art') return renderArt(edit);
     if (tab === 'tracks') return renderTrack(edit);
     if (tab === 'sfx') return renderSfx(edit);
   }
@@ -761,6 +765,304 @@
     }
   }
 
+  /* ---------------- «Картинки»: мейкер обложек и цветов кассет ----------------
+     Настройки пишутся в project.art (формат — в начале js/art.js). Превью
+     рисуются настоящими стилями сайта внутри shadow DOM, а картинку для
+     каждого места выбирает тот же js/art.js, что и сайт, — так что в превью
+     ровно то, что покажет сайт. */
+
+  const PLACE_INFO = {
+    tape: ['Кассета в «Музыке»', 'Кружок-наклейка на кассете в карусели. Только картинка, видео сюда не встанет.'],
+    pick: ['Плейлист: список проектов', 'Миниатюра в окне выбора проекта над списком треков. Слева — настоящий размер, справа — крупно для настройки.'],
+    player: ['Плеер', 'Большая обложка плеера и маленькая — в мини-плеере внизу экрана.'],
+    card: ['Карточка проекта', 'Картинка или видео в разделе «Проекты».'],
+    feature: ['Большая карточка в «Код и моды»', 'Есть только у проектов, выбранных для «Код и моды».'],
+  };
+  const ART_DEFAULT = { zoom: 1, x: 50, y: 50, size: 2.5 };
+  const FONTS_URL = 'https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;800&family=Manrope:wght@400;500;700&family=Caveat:wght@600&display=swap';
+  let siteCss = null;
+
+  async function loadSiteCss() {
+    if (siteCss !== null) return;
+    // шрифты — в сам документ: внутри shadow DOM @font-face не подключается
+    document.head.append(h('link', { rel: 'stylesheet', href: FONTS_URL }));
+    const r = await fetch('/css/style.css?t=' + Date.now());
+    siteCss = (await r.text()).replace(/:root\b/g, ':host') +
+      ':host{display:block;font-family:var(--font-body);color:var(--text)} [data-drag]{cursor:grab;touch-action:none} [data-drag]:active{cursor:grabbing}' +
+      '.pv-none{display:grid;place-items:center;color:var(--muted);font-size:13px;border:1px dashed var(--border);border-radius:12px}';
+  }
+
+  // убрать пустые настройки и значения по умолчанию, чтобы content.js не пух
+  function cleanArt() {
+    C.projects.forEach((p) => {
+      if (!p.art) return;
+      window.Art.PLACES.forEach((pl) => {
+        const a = p.art[pl];
+        if (!a) return;
+        ['zoom', 'x', 'y', 'size'].forEach((k) => { if (a[k] == null || a[k] === ART_DEFAULT[k]) delete a[k]; });
+        if (pl !== 'tape') delete a.size;
+        if (a.src === undefined || a.src === null) delete a.src;
+        if (!Object.keys(a).length) delete p.art[pl];
+      });
+      if (!p.art.color) delete p.art.color;
+      if (!Object.keys(p.art).length) delete p.art;
+    });
+  }
+
+  // кассета — та же разметка, что в js/sound.js (tapeMarkup)
+  function tapeHtml(color, a, w) {
+    return '<span class="tape' + (a ? ' has-sticker' : '') + '" style="--w:' + w + 'px;--tc:' + color + (a ? ';--ss:' + a.size : '') + '">' +
+      '<span class="tape-screw s1"></span><span class="tape-screw s2"></span><span class="tape-screw s3"></span><span class="tape-screw s4"></span>' +
+      '<span class="tape-label"><span class="tape-side">A</span><span class="tape-title"></span><span class="tape-sub"></span>' +
+      '<span class="tape-window"><span class="tape-reel l"><span class="tape-hub"></span></span>' +
+      '<span class="tape-film"></span><span class="tape-reel r"><span class="tape-hub"></span></span></span></span>' +
+      (a ? '<span class="tape-sticker" data-drag style="' + window.Art.style(a) + '"><img src="/' + a.src + '" alt="" draggable="false"></span>' : '') +
+      '<span class="tape-foot"><i></i><i></i><i></i><i></i></span></span>';
+  }
+
+  function mediaTag(cls, a, extra) {
+    const st = ' style="' + window.Art.style(a) + '"';
+    return window.Art.isVideo(a.src)
+      ? '<video class="' + cls + '" src="/' + a.src + '"' + st + ' autoplay muted loop playsinline ' + (extra || '') + '></video>'
+      : '<img class="' + cls + '" src="/' + a.src + '"' + st + ' alt="" draggable="false" ' + (extra || '') + '>';
+  }
+
+  function previewHtml(p, i, place) {
+    const a = window.Art.get(p, place);
+    const none = (w, hgt, text) => '<div class="pv-none" style="width:' + w + 'px;height:' + hgt + 'px">' + text + '</div>';
+    if (place === 'tape') return tapeHtml(window.Art.color(p, i), a, 340);
+    if (!a) return none(300, 120, 'Картинки нет — здесь будет пусто или заглушка сайта');
+    const st = window.Art.style(a);
+    if (place === 'pick') {
+      return '<div style="display:flex;gap:28px;align-items:center">' +
+        '<div class="sheet-opt" style="width:280px;background:var(--surface-solid);border-radius:12px;padding:10px 12px;display:flex;gap:10px;align-items:center">' +
+        '<span class="sheet-thumb"><img src="/' + a.src + '" style="' + st + '" alt=""></span>' +
+        '<span class="sheet-opt-label"></span><span class="sheet-opt-count"></span></div>' +
+        '<span class="sheet-thumb" data-drag style="width:160px;height:160px;border-radius:46px"><img src="/' + a.src + '" style="' + st + '" alt="" draggable="false"></span></div>';
+    }
+    if (place === 'player') {
+      return '<div style="display:flex;gap:28px;align-items:flex-end">' +
+        '<div class="stage-cover" data-drag style="width:300px">' +
+        (window.Art.isVideo(a.src) ? '' : '<div class="stage-cover-blur" style="background-image:url(\'/' + a.src + '\')"></div>') +
+        mediaTag('stage-cover-img', a) + '</div>' +
+        (window.Art.isVideo(a.src) ? '' : '<span class="minibar-cover" style="display:grid">' + mediaTag('', a) + '</span>') + '</div>';
+    }
+    if (place === 'card') {
+      return '<div class="project-media-wrap" data-drag style="width:440px">' +
+        (p.mediaContain && !window.Art.isVideo(a.src) ? '<div class="pm-blur" style="background-image:url(\'/' + a.src + '\')"></div>' : '') +
+        mediaTag('project-media' + (p.mediaContain ? ' pm-contain' : ''), a) + '</div>';
+    }
+    return '<div class="feature-media" data-drag style="width:520px;height:300px;overflow:hidden;border-radius:14px">' + mediaTag('', a) + '</div>';
+  }
+
+  function renderArt(edit) {
+    const i = Math.min(sel.projects, C.projects.length - 1);
+    const p = C.projects[i];
+    if (!p) return;
+    if (siteCss === null) {
+      edit.append(h('p', { class: 'sub', text: 'Загружаю стили сайта…' }));
+      loadSiteCss().then(renderEdit).catch((e) => toast(String(e.message || e), true));
+      return;
+    }
+    const nTracks = C.tracks.filter((t) => t.project === p.id).length;
+    edit.append(h('h2', { text: 'Картинки: ' + ((p.name && p.name.ru) || p.id) }));
+    edit.append(h('div', { class: 'sub', html:
+      'Для каждого места можно взять картинку проекта, поставить другую или убрать её. Двигай картинку мышью прямо в превью, ' +
+      'колесо мыши — масштаб. Потом нажми <b>«Сохранить»</b> — настройки запишутся в data/content.js, и сайт их подхватит.' }));
+
+    // цвет кассеты + лента всех кассет, чтобы видеть повторы
+    if (nTracks) edit.append(colorBlock(p, i));
+    else edit.append(h('div', { class: 'hint', style: 'margin-bottom:18px', text: 'У проекта нет треков — кассеты в «Музыке» у него нет, цвет не нужен.' }));
+
+    const featured = ((C.code && C.code.featured) || []).includes(p.id);
+    window.Art.PLACES.forEach((place) => {
+      if (place === 'feature' && !featured) return;
+      if ((place === 'tape' || place === 'pick' || place === 'player') && !nTracks) return;
+      edit.append(placeBlock(p, i, place));
+    });
+  }
+
+  function colorBlock(p, i) {
+    const wrap = h('div', { class: 'card art-card' });
+    const strip = h('div', { class: 'art-strip' });
+    const warn = h('div', { class: 'hint' });
+    const input = h('input', { type: 'color', value: window.Art.color(p, i) });
+    const chips = h('div', { class: 'art-chips' });
+
+    function others() {
+      const used = {};
+      C.projects.forEach((q, j) => {
+        if (q === p || !C.tracks.some((t) => t.project === q.id)) return;
+        const c = window.Art.color(q, j).toLowerCase();
+        (used[c] = used[c] || []).push((q.name && q.name.ru) || q.id);
+      });
+      used[window.Art.ALL_COLOR] = (used[window.Art.ALL_COLOR] || []).concat('«Вся музыка»');
+      return used;
+    }
+    function setColor(c) {
+      p.art = p.art || {};
+      p.art.color = c;
+      markDirty();
+      paint();
+      renderSide();
+    }
+    function paint() {
+      const cur = window.Art.color(p, i).toLowerCase();
+      input.value = cur;
+      const used = others();
+      warn.textContent = used[cur] ? '⚠ Такой же цвет у: ' + used[cur].join(', ') + '. Выбери другой, чтобы кассеты не повторялись.' : 'Цвет уникальный ✓';
+      warn.style.color = used[cur] ? 'var(--danger)' : 'var(--ok)';
+      chips.innerHTML = '';
+      window.Art.PALETTE.concat(['#fef08a', '#e9d5ff', '#99f6e4', '#fecaca', '#ffffff']).forEach((c) => {
+        chips.append(h('button', {
+          class: 'art-chip' + (c === cur ? ' on' : '') + (used[c] ? ' used' : ''),
+          style: 'background:' + c, title: used[c] ? 'занят: ' + used[c].join(', ') : 'свободен',
+          onclick: () => setColor(c),
+        }));
+      });
+      // все кассеты в порядке карусели (свежие ближе), текущая подсвечена
+      const list = C.projects.filter((q) => C.tracks.some((t) => t.project === q.id));
+      list.sort((x, y) => (y.updated || '').localeCompare(x.updated || '') || (y.started || '').localeCompare(x.started || ''));
+      const root = strip.shadowRoot || strip.attachShadow({ mode: 'open' });
+      root.innerHTML = '<style>' + siteCss + '.row{display:flex;flex-wrap:wrap;gap:10px}.on{outline:3px solid #fff;outline-offset:3px;border-radius:8px}</style><div class="row">' +
+        '<span title="Вся музыка">' + tapeHtml(window.Art.ALL_COLOR, null, 120) + '</span>' +
+        list.map((q) => '<span class="' + (q === p ? 'on' : '') + '" title="' + ((q.name && q.name.ru) || q.id) + '">' +
+          tapeHtml(window.Art.color(q, C.projects.indexOf(q)), window.Art.get(q, 'tape'), 120) + '</span>').join('') + '</div>';
+      const titles = root.querySelectorAll('.tape-title');
+      titles[0].textContent = 'Вся музыка';
+      list.forEach((q, k) => { titles[k + 1].textContent = (q.name && q.name.ru) || q.id; });
+    }
+    input.addEventListener('input', () => setColor(input.value));
+    wrap.append(h('h3', { text: 'Цвет кассеты' }),
+      h('div', { class: 'links-row' }, input, chips), warn,
+      h('div', { class: 'hint', style: 'margin:12px 0 6px', text: 'Все кассеты в порядке карусели (обводка — этот проект). Тот же цвет получит кассета звуков проекта в «Саунд-дизайне».' }),
+      strip);
+    paint();
+    return wrap;
+  }
+
+  function placeBlock(p, i, place) {
+    const info = PLACE_INFO[place];
+    const box = h('div', { class: 'card art-card' });
+    const pv = h('div', { class: 'art-preview' });
+    const root = pv.attachShadow({ mode: 'open' });
+    const controls = h('div', { class: 'art-controls' });
+    const cfg = () => (p.art && p.art[place]) || {};
+    function set(patch) {
+      p.art = p.art || {};
+      p.art[place] = Object.assign({}, p.art[place] || {}, patch);
+      markDirty();
+    }
+
+    function paintPreview() {
+      root.innerHTML = '<style>' + siteCss + '</style>' + previewHtml(p, i, place);
+      root.querySelectorAll('.tape-title').forEach((el) => { el.textContent = (p.name && p.name.ru) || p.id; });
+      root.querySelectorAll('.tape-sub').forEach((el) => { el.textContent = C.tracks.filter((t) => t.project === p.id).length + ' тр.'; });
+      root.querySelectorAll('.sheet-opt-label').forEach((el) => { el.textContent = (p.name && p.name.ru) || p.id; });
+      root.querySelectorAll('.sheet-opt-count').forEach((el) => { el.textContent = C.tracks.filter((t) => t.project === p.id).length; });
+      const drag = root.querySelector('[data-drag]');
+      if (drag) bindDrag(drag);
+    }
+
+    // перетаскивание — сдвиг кадра, колесо — масштаб
+    function bindDrag(el) {
+      let start = null;
+      el.addEventListener('pointerdown', (e) => {
+        const a = window.Art.get(p, place);
+        if (!a) return;
+        start = { x: e.clientX, y: e.clientY, ax: a.x, ay: a.y, w: el.clientWidth, h: el.clientHeight };
+        el.setPointerCapture(e.pointerId);
+        e.preventDefault();
+      });
+      el.addEventListener('pointermove', (e) => {
+        if (!start) return;
+        const k = 60; // чувствительность: проценты кадра на ширину превью
+        const x = Math.max(0, Math.min(100, start.ax - (e.clientX - start.x) / start.w * k));
+        const y = Math.max(0, Math.min(100, start.ay - (e.clientY - start.y) / start.h * k));
+        set({ x: Math.round(x), y: Math.round(y) });
+        applyVars();
+        paintControls();
+      });
+      el.addEventListener('pointerup', () => { start = null; });
+      el.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const a = window.Art.get(p, place);
+        if (!a) return;
+        set({ zoom: Math.round(Math.max(1, Math.min(4, a.zoom * (e.deltaY < 0 ? 1.06 : 1 / 1.06))) * 100) / 100 });
+        applyVars();
+        paintControls();
+      }, { passive: false });
+    }
+
+    // при перетаскивании меняем только CSS-переменные, без перерисовки
+    function applyVars() {
+      const a = window.Art.get(p, place);
+      if (!a) return;
+      root.querySelectorAll('img, video').forEach((m) => {
+        m.style.setProperty('--ax', a.x + '%');
+        m.style.setProperty('--ay', a.y + '%');
+        m.style.setProperty('--az', a.zoom);
+      });
+      root.querySelectorAll('.tape-sticker').forEach((m) => {
+        m.style.setProperty('--ax', a.x + '%'); m.style.setProperty('--ay', a.y + '%'); m.style.setProperty('--az', a.zoom);
+      });
+      root.querySelectorAll('.tape').forEach((m) => m.style.setProperty('--ss', a.size));
+    }
+
+    function slider(label, key, min, max, step, fmt) {
+      const a = window.Art.get(p, place) || ART_DEFAULT;
+      const out = h('span', { class: 'art-val', text: fmt(a[key]) });
+      const r = h('input', { type: 'range', min: min, max: max, step: step, value: a[key] });
+      r.addEventListener('input', () => {
+        const v = Number(r.value);
+        set({ [key]: v });
+        out.textContent = fmt(v);
+        applyVars();
+      });
+      return h('label', { class: 'art-slider' }, h('span', { text: label }), r, out);
+    }
+
+    function paintControls() {
+      controls.innerHTML = '';
+      const c = cfg();
+      const mode = c.src === '' ? 'none' : (c.src ? 'own' : 'base');
+      const seg = h('div', { class: 'art-seg' });
+      [['base', 'Как у проекта'], ['own', 'Другая картинка'], ['none', 'Убрать']].forEach(([m, label]) => {
+        seg.append(h('button', {
+          class: 'btn small' + (m === mode ? ' primary' : ''), text: label,
+          onclick: () => {
+            if (m === 'base') { const a = Object.assign({}, cfg()); delete a.src; p.art = p.art || {}; p.art[place] = a; markDirty(); }
+            if (m === 'none') set({ src: '' });
+            if (m === 'own') set({ src: cfg().src || (window.Art.get(Object.assign({}, p, { art: {} }), place) || {}).src || (coverOf(p) || '') });
+            paintPreview(); paintControls();
+          },
+        }));
+      });
+      controls.append(seg);
+      if (mode === 'own') {
+        controls.append(fileField('media', c.src || '', (v) => { set({ src: v || '' }); paintPreview(); paintControls(); }));
+      }
+      const a = window.Art.get(p, place);
+      if (a) {
+        controls.append(
+          slider('Масштаб', 'zoom', 1, 4, 0.01, (v) => '×' + Number(v).toFixed(2)),
+          slider('По горизонтали', 'x', 0, 100, 1, (v) => v + '%'),
+          slider('По вертикали', 'y', 0, 100, 1, (v) => v + '%'));
+        if (place === 'tape') controls.append(slider('Размер наклейки', 'size', 1.4, 3.6, 0.05, (v) => Number(v).toFixed(2) + ' em'));
+      }
+      controls.append(h('button', {
+        class: 'btn small ghost', text: 'Сбросить это место',
+        onclick: () => { if (p.art) delete p.art[place]; markDirty(); paintPreview(); paintControls(); },
+      }));
+    }
+
+    box.append(h('h3', { text: info[0] }), h('div', { class: 'hint', style: 'margin:-4px 0 12px', text: info[1] }),
+      h('div', { class: 'art-row' }, pv, controls));
+    paintPreview();
+    paintControls();
+    return box;
+  }
+
   /* ---------------- сохранение ---------------- */
 
   function validate() {
@@ -780,6 +1082,7 @@
   }
 
   async function save() {
+    cleanArt();
     const problems = validate();
     const fatal = problems.filter((p) => p.startsWith('повторяется'));
     if (fatal.length) { toast('Не сохранено: ' + fatal[0], true); throw new Error(fatal[0]); }
@@ -825,6 +1128,7 @@
       await loadScript('/data/i18n.js' + v);
       await loadScript('/data/content.js' + v);
       await loadScript('/data/peaks.js' + v);
+      await loadScript('/js/art.js' + v);
       C = JSON.parse(JSON.stringify(window.CONTENT));
       PEAKS = JSON.parse(JSON.stringify(window.PEAKS || {}));
       DURS = JSON.parse(JSON.stringify(window.DURS || {}));

@@ -1964,21 +1964,19 @@ button.contact-card {
 }
 .tape-sticker img, .sheet-thumb img, .stage-cover-img, .minibar-cover img, .project-media, .feature-media img { transform: scale(var(--az, 1)); }
 
-/* кружок с обложкой: на корпусе в правом верхнем углу, выше окошка с катушками.
-   --ss — диаметр в em (меняется во вкладке «Картинки» редактора) */
+/* кружок с обложкой на наклейке справа сверху. --ss — диаметр в em
+   (меняется во вкладке «Картинки» редактора) */
 .tape-sticker {
   position: absolute;
-  z-index: 2;
-  right: 0.9em; top: 0.05em;
-  width: calc(var(--ss, 2.5) * 1em); height: calc(var(--ss, 2.5) * 1em);
+  right: 0.45em; top: 0.18em;
+  width: calc(var(--ss, 2.1) * 1em); height: calc(var(--ss, 2.1) * 1em);
   border-radius: 50%;
   overflow: hidden;
-  background: #f1ebdd;
   box-shadow: 0 0 0 0.12em #f1ebdd, 0 0.08em 0.3em rgba(0, 0, 0, 0.35);
   transform: rotate(-8deg);
 }
 .tape-sticker img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.tape.has-sticker .tape-title { right: calc((var(--ss, 2.5) + 0.25) * 1em / 1.12); }
+.tape.has-sticker .tape-title { right: calc((var(--ss, 2.1) + 1.15) * 1em / 1.12); }
 
 .mt-arrow {
   position: absolute;

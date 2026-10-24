@@ -48,7 +48,7 @@ window.CONTENT = {
         { label: 'МТС Музыка', url: 'https://music.mts.ru/artist/22488483/album/31957504' },
         { label: 'OK', url: 'https://ok.ru/music/album/122959599653669' },
       ],
-      art: { color: '#38bdf8' },
+      art: { color: '#99f6e4' },
     },
     {
       id: 'grekhopadenie',
@@ -190,7 +190,7 @@ window.CONTENT = {
         { label: 'Telegram', url: 'https://t.me/s/alpha_vmj' },
         { label: 'YouTube', url: 'https://www.youtube.com/channel/UCBHoqWzpyF0-ejNA53NZ6ZA' },
       ],
-      art: { color: '#2dd4bf' },
+      art: { color: '#38bdf8', tape: { x: 10 }, pick: { x: 12 }, player: { x: 7 } },
     },
     {
       id: 'valonabang',
@@ -294,7 +294,7 @@ window.CONTENT = {
       links: [
         { label: 'VK Play', url: 'https://vkplay.ru/play/game/les-pomnit-imena-47550/' },
       ],
-      art: { color: '#cabd5a' },
+      art: { color: '#cabd5a', tape: { x: 0 }, pick: { x: 0 }, player: { x: 0 } },
     },
     {
       id: 'zaoblachny',
@@ -554,7 +554,7 @@ window.CONTENT = {
         { label: 'VK Play', url: 'https://vkplay.ru/play/game/the-rabbit-creation-of-the-mind-44768/' },
         { label: 'Telegram', url: 'https://t.me/s/rabbitofthemind' },
       ],
-      art: { color: '#fb923c' },
+      art: { color: '#fb923c', player: { x: 56 }, pick: { x: 57 } },
     },
   ],
 
@@ -588,7 +588,7 @@ window.CONTENT = {
     { id: 'al-katya-thr', project: 'alpha', file: 'audio/music/al-katya-thr.mp3', title: { ru: 'Катя: угроза', en: 'Katya: Threat' }, genres: ['orchestral'], moods: ['tense', 'happy'] },
     { id: 'al-katya-sad', project: 'alpha', file: 'audio/music/al-katya-sad.mp3', title: { ru: 'Катя: грусть', en: 'Katya: Sadness' }, genres: ['orchestral'], moods: ['sad', 'calm'] },
     { id: 'al-dita1', project: 'alpha', file: 'audio/music/al-dita1.mp3', title: { ru: 'Тема Диты', en: "Dita's Theme" }, genres: ['orchestral'], moods: ['happy', 'cozy'] },
-    { id: 'al-dita', project: 'alpha', file: 'audio/music/al-dita.mp3', title: { ru: 'Дита: другая сторона', en: 'Dita: The Other Side' }, genres: ['orchestral', 'rock'], moods: ['calm', 'tense'] },
+    { id: 'al-dita', project: 'alpha', file: 'audio/music/al-dita.mp3', title: { ru: 'Дита: другая сторона', en: 'Dita: The Other Side' }, genres: ['orchestral'], moods: ['calm', 'tense'] },
     { id: 'al-taisiya1', project: 'alpha', file: 'audio/music/al-taisiya1.mp3', title: { ru: 'Тема Таисии', en: "Taisiya's Theme" }, genres: ['orchestral'], moods: ['happy', 'tense'] },
     { id: 'al-taisiya', project: 'alpha', file: 'audio/music/al-taisiya.mp3', title: { ru: 'Таисия: всерьёз', en: 'Taisiya: For Real' }, genres: ['rock', 'dark'], moods: ['tense', 'epic'] },
     { id: 'va-funny', project: 'valonabang', file: 'audio/music/va-funny.mp3', title: { ru: 'Funny Hip-Hop Jazz', en: 'Funny Hip-Hop Jazz' }, genres: ['jazz', 'lofi'], moods: ['happy'] },

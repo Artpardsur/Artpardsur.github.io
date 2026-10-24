@@ -778,7 +778,7 @@
     card: ['Карточка проекта', 'Картинка или видео в разделе «Проекты».'],
     feature: ['Большая карточка в «Код и моды»', 'Есть только у проектов, выбранных для «Код и моды».'],
   };
-  const ART_DEFAULT = { zoom: 1, x: 50, y: 50, size: 2.5 };
+  const ART_DEFAULT = { zoom: 1, x: 50, y: 50, size: 2.1 };
   const FONTS_URL = 'https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;800&family=Manrope:wght@400;500;700&family=Caveat:wght@600&display=swap';
   let siteCss = null;
 
@@ -814,9 +814,9 @@
     return '<span class="tape' + (a ? ' has-sticker' : '') + '" style="--w:' + w + 'px;--tc:' + color + (a ? ';--ss:' + a.size : '') + '">' +
       '<span class="tape-screw s1"></span><span class="tape-screw s2"></span><span class="tape-screw s3"></span><span class="tape-screw s4"></span>' +
       '<span class="tape-label"><span class="tape-side">A</span><span class="tape-title"></span><span class="tape-sub"></span>' +
+      (a ? '<span class="tape-sticker" data-drag style="' + window.Art.style(a) + '"><img src="/' + a.src + '" alt="" draggable="false"></span>' : '') +
       '<span class="tape-window"><span class="tape-reel l"><span class="tape-hub"></span></span>' +
       '<span class="tape-film"></span><span class="tape-reel r"><span class="tape-hub"></span></span></span></span>' +
-      (a ? '<span class="tape-sticker" data-drag style="' + window.Art.style(a) + '"><img src="/' + a.src + '" alt="" draggable="false"></span>' : '') +
       '<span class="tape-foot"><i></i><i></i><i></i><i></i></span></span>';
   }
 
@@ -1048,7 +1048,7 @@
           slider('Масштаб', 'zoom', 1, 4, 0.01, (v) => '×' + Number(v).toFixed(2)),
           slider('По горизонтали', 'x', 0, 100, 1, (v) => v + '%'),
           slider('По вертикали', 'y', 0, 100, 1, (v) => v + '%'));
-        if (place === 'tape') controls.append(slider('Размер наклейки', 'size', 1.4, 3.6, 0.05, (v) => Number(v).toFixed(2) + ' em'));
+        if (place === 'tape') controls.append(slider('Размер наклейки', 'size', 1.2, 3.2, 0.05, (v) => Number(v).toFixed(2) + ' em'));
       }
       controls.append(h('button', {
         class: 'btn small ghost', text: 'Сбросить это место',

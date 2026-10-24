@@ -394,16 +394,15 @@
     return window.Art.color(C.projects.find((p) => p.id === g.project), i);
   }
 
-  // кассета: корпус, винты, этикетка с окошком и катушками, низ; по желанию —
-  // кружок с обложкой (img из Art.get) в правом верхнем углу, над катушкой
+  // кассета: корпус, винты, наклейка (по желанию — кружок с обложкой из Art.get), окошко с катушками, низ
   function tapeMarkup(title, color, sub, big, img) {
     return '<span class="tape' + (big ? ' tape-big' : '') + (img ? ' has-sticker' : '') + '" style="--tc:' + color +
       (img ? ';--ss:' + img.size : '') + '">' +
       '<span class="tape-screw s1"></span><span class="tape-screw s2"></span><span class="tape-screw s3"></span><span class="tape-screw s4"></span>' +
       '<span class="tape-label"><span class="tape-side">A</span><span class="tape-title"></span><span class="tape-sub"></span>' +
+      (img ? '<span class="tape-sticker" style="' + window.Art.style(img) + '"><img src="' + img.src + '" alt="" loading="lazy"></span>' : '') +
       '<span class="tape-window"><span class="tape-reel l"><span class="tape-hub"></span></span>' +
       '<span class="tape-film"></span><span class="tape-reel r"><span class="tape-hub"></span></span></span></span>' +
-      (img ? '<span class="tape-sticker" style="' + window.Art.style(img) + '"><img src="' + img.src + '" alt="" loading="lazy"></span>' : '') +
       '<span class="tape-foot"><i></i><i></i><i></i><i></i></span></span>';
   }
   function fillTape(el, title, sub) {

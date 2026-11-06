@@ -168,6 +168,44 @@ MUSIC_2026 = {
 
 N_BUCKETS = 110
 
+# Отрывки вместо полных треков: проекты автора «Полли» (Mr.Fox) — он просил
+# не выкладывать саундтрек целиком (05.11.2026). id -> начало отрывка, с.
+# Правило выбора: с начала трека; если первые 30 с тише самого плотного
+# 30-секундного окна на 3 дБ и больше — берётся это окно (замер 06.11.2026).
+EXCERPT_LEN = 30
+EXCERPT_FADE_IN = 1.0   # только если отрывок начинается не с нуля
+EXCERPT_FADE_OUT = 3.0
+EXCERPTS = {
+    "al-menu": 45,        # начало −20,1 дБ, окно @45 с −17,1 дБ
+    "al-dreams": 0,
+    "al-joyful": 0,
+    "al-dance": 91,       # тихое вступление −20,3 дБ, окно @91 с −16,0 дБ
+    "al-runner": 0,
+    "al-lazy": 0,
+    "al-katya": 144,      # начало −19,5 дБ, окно @144 с −15,4 дБ
+    "al-katya-thr": 0,
+    "al-katya-sad": 0,
+    "al-dita1": 0,
+    "al-dita": 0,
+    "al-taisiya1": 0,
+    "al-taisiya": 0,
+}
+
+
+def cut_excerpt(src, dst, start):
+    """Отрывок EXCERPT_LEN секунд с затуханиями, mp3 V2 без тегов."""
+    fades = []
+    if start > 0:
+        fades.append("afade=t=in:st=0:d=%g" % EXCERPT_FADE_IN)
+    fades.append("afade=t=out:st=%g:d=%g" % (EXCERPT_LEN - EXCERPT_FADE_OUT, EXCERPT_FADE_OUT))
+    r = subprocess.run(
+        [FFMPEG, "-y", "-v", "error", "-ss", str(start), "-t", str(EXCERPT_LEN), "-i", src,
+         "-map", "0:a", "-map_metadata", "-1", "-af", ",".join(fades),
+         "-codec:a", "libmp3lame", "-q:a", "2", dst],
+        capture_output=True, text=True)
+    if r.returncode != 0:
+        raise RuntimeError("ffmpeg failed for %s: %s" % (src, r.stderr[-500:]))
+
 
 def transcode(src, dst):
     """Пережать в mp3 V2 без тегов и обложек."""
@@ -246,7 +284,9 @@ def main():
             errors.append("MISSING: " + src)
             continue
         try:
-            if tid in fresh:
+            if tid in EXCERPTS:
+                cut_excerpt(src, dst, EXCERPTS[tid])
+            elif tid in fresh:
                 transcode(src, dst)
             else:
                 convert(src, dst)

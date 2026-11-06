@@ -245,10 +245,17 @@
     titleEl.textContent = title;
     projectEl.textContent = projName;
     miniTitle.textContent = title;
-    miniProject.textContent = projName;
+    miniProject.textContent = tr.excerpt ? projName + ' · ' + window.t('music.excerpt') : projName;
 
     // теги трека — только в плеере, чтобы список оставался спокойным
     tagsEl.innerHTML = '';
+    // отрывок, а не полная версия (по просьбе автора проекта) — первым тегом
+    if (tr.excerpt) {
+      const s = document.createElement('span');
+      s.className = 'stage-tag is-excerpt';
+      s.textContent = window.t('music.excerpt');
+      tagsEl.appendChild(s);
+    }
     (tr.genres || []).concat(tr.moods || []).forEach((k, i) => {
       const isMood = i >= (tr.genres || []).length;
       const s = document.createElement('span');

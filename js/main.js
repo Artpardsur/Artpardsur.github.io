@@ -306,10 +306,13 @@
         '<span class="track-meta">' +
         '<span class="track-title"></span>' +
         '<span class="track-proj"></span></span>' +
-        '<span class="track-dur">' + fmt(window.DURS[tr.id]) + '</span>' +
+        '<span class="track-dur">' + (tr.excerpt ? '<span class="track-excerpt"></span>' : '') +
+        fmt(window.DURS[tr.id]) + '</span>' +
         '<span class="track-line"><span class="track-line-fill"></span></span>';
       row.querySelector('.track-title').textContent = loc(tr.title);
       row.querySelector('.track-proj').textContent = proj ? loc(proj.name) : t('music.noProject');
+      // отрывок, а не полная версия (по просьбе автора проекта)
+      if (tr.excerpt) row.querySelector('.track-excerpt').textContent = t('music.excerpt');
       row.addEventListener('click', () => window.Player.play(tr));
       list.appendChild(row);
     });

@@ -99,7 +99,7 @@ EXTRA_BLOCKS = [
     ("updates", "ОБНОВЛЕНИЯ САЙТА: последние сверху, показываются первые 4"),
     ("code", "КОД И МОДЫ: featured — id проектов для большой карточки, mods — моды"),
 ]
-TRACK_ORDER = ["id", "project", "file", "title", "genres", "moods", "year"]
+TRACK_ORDER = ["id", "project", "file", "title", "genres", "moods", "year", "excerpt"]
 SFX_ITEM_ORDER = ["id", "file", "icon", "name"]
 CONTACT_ORDER = ["id", "icon", "value", "url", "copy"]
 

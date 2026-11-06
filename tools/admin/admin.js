@@ -520,6 +520,12 @@
 
     edit.append(row('Жанры', checks(C.genres, t.genres = t.genres || [], (g) => ru('genre.' + g), null)));
     edit.append(row('Настроения', checks(C.moods, t.moods = t.moods || [], (m) => ru('mood.' + m), null)));
+    // «отрывок» — на сайте пометка, что выложена не полная версия (сам файл режет build_audio.py, EXCERPTS)
+    const ex = t.excerpt ? ['excerpt'] : [];
+    edit.append(row('Версия', checks(['excerpt'], ex, () => 'Отрывок, не полная версия', null)));
+    edit.lastChild.querySelector('.check').addEventListener('click', () => {
+      if (ex.length) t.excerpt = true; else delete t.excerpt;
+    });
 
     edit.append(h('div', { class: 'formbar' },
       h('button', { class: 'btn small', text: '↑ выше', onclick: () => { sel.tracks = move(C.tracks, i, -1); render(); } }),

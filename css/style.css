@@ -582,6 +582,7 @@ body.has-cursor .cursor-dot, body.has-cursor .cursor-ring { display: flex; }
   padding: 3px 11px;
 }
 .stage-tag.is-mood { color: var(--yellow-soft); background: rgba(255, 214, 10, 0.1); }
+.stage-tag.is-excerpt { color: var(--text); background: none; box-shadow: inset 0 0 0 1px var(--muted); }
 
 .stage-wave { width: 100%; height: 74px; margin-top: auto; padding-top: 16px; touch-action: none; }
 .stage-times {
@@ -759,6 +760,15 @@ body.has-cursor .cursor-dot, body.has-cursor .cursor-ring { display: flex; }
   white-space: nowrap;
 }
 .track-dur { font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.track-excerpt {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--muted);
+  font-size: 11px;
+  vertical-align: 1px;
+}
 .track-line {
   position: absolute;
   left: 14px; right: 14px; bottom: 4px;

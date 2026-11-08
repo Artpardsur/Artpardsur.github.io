@@ -763,6 +763,10 @@ window.CONTENT = {
   /* ---------------- ОБНОВЛЕНИЯ САЙТА: последние сверху, показываются первые 4 ---------------- */
   updates: [
     {
+      date: '2026-11-08',
+      text: { ru: 'Скриншоты мода Paraselene для RimWorld: рост, кожа, кладка, долголетие', en: 'Screenshots of the Paraselene RimWorld mod: height, skin, clutches, longevity' },
+    },
+    {
       date: '2026-10-24',
       text: { ru: 'Новая музыка: «Пространство Бога» и тема героя, все темы «Альфы», ещё три трека «Чернобыля», марш и Project Z во фрилансе', en: 'New music: God’s Space and the hero theme, all Alpha themes, three more Chernobyl tracks, a march and Project Z in freelance' },
     },
@@ -790,10 +794,19 @@ window.CONTENT = {
     mods: [
       {
         id: 'rimworld',
-        name: { ru: 'Моды для RimWorld', en: 'RimWorld mods' },
+        name: { ru: 'Paraselene — мод для RimWorld', en: 'Paraselene — a RimWorld mod' },
         game: 'RimWorld',
         status: 'wip',
-        desc: {},
+        desc: { ru: 'Народы визуальной новеллы Paraselene — аквамарисы, морионы, санстоуны и доломиты — как ксенотипы Biotech. Своя библиотека на C# под RimWorld 1.7 и Harmony: кладка из нескольких яиц по таблице лора, рост в сантиметрах у каждого персонажа, оттенки кожи, которые передаются детям как рецессивные гены, и долголетие — 727 лет вместо человеческих 100.', en: 'The peoples of the Paraselene visual novel — aquamaris, morions, sunstones and dolomites — as Biotech xenotypes. A custom C# library for RimWorld 1.7 and Harmony: multi-egg clutches from the lore table, height in centimetres for every pawn, skin tones passed to children as recessive genes, and longevity — 727 years instead of a human 100.' },
+        shots: [
+          { src: 'media/rimworld/paraselene-rost.webp', thumb: 'media/rimworld/paraselene-rost.webp', w: 1600, h: 218, wide: true, caption: { ru: 'Рост по таблице лора: человек 169 см, аквамарисы 180–210, морионы 170–190, санстоуны 140–160, доломиты 110–150', en: 'Heights from the lore table: human 169 cm, aquamaris 180–210, morions 170–190, sunstones 140–160, dolomites 110–150' } },
+          { src: 'media/rimworld/paraselene-kozha.webp', thumb: 'media/rimworld/paraselene-kozha-thumb.webp', w: 1580, h: 510, caption: { ru: 'Двенадцать оттенков кожи аквамарисов: виден один, остальные передаются детям как рецессивные', en: 'Twelve aquamaris skin tones: one is shown, the rest are passed to children as recessive' } },
+          { src: 'media/rimworld/paraselene-narody.webp', thumb: 'media/rimworld/paraselene-narody-thumb.webp', w: 1540, h: 480, caption: { ru: 'Доломиты, санстоуны и морионы — у каждого народа свои волосы и кожа', en: 'Dolomites, sunstones and morions, each people with its own hair and skin' } },
+          { src: 'media/rimworld/paraselene-kladka.webp', thumb: 'media/rimworld/paraselene-kladka-thumb.webp', w: 880, h: 360, caption: { ru: 'Кладка: четыре яйца за одни роды, младенцы вылупляются из скорлупы', en: 'A clutch: four eggs from one birth, the babies hatch from the shells' } },
+          { src: 'media/rimworld/paraselene-geny.webp', thumb: 'media/rimworld/paraselene-geny-thumb.webp', w: 690, h: 656, caption: { ru: 'Гены аквамариса: кладка, рост, острые уши и носимые оттенки кожи', en: 'Aquamaris genes: clutch, height, pointed ears and carried skin tones' } },
+          { src: 'media/rimworld/paraselene-panel.webp', thumb: 'media/rimworld/paraselene-panel-thumb.webp', w: 1340, h: 578, caption: { ru: 'Рост в сантиметрах в панели персонажа — у каждого свой', en: 'Height in centimetres in the pawn panel, unique for every pawn' } },
+          { src: 'media/rimworld/paraselene-dolgoletie.webp', thumb: 'media/rimworld/paraselene-dolgoletie-thumb.webp', w: 842, h: 219, caption: { ru: 'Долголетие: эллильцы живут 727 лет и взрослеют в 7,27 раза дольше людей, замедление настраивается', en: 'Longevity: ellilians live 727 years and grow up 7.27 times slower than humans, adjustable in the settings' } },
+        ],
         links: [],
       },
       {

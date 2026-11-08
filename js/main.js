@@ -764,11 +764,25 @@
       card.setAttribute('data-anim', 'fade');
       const links = (m.links || []).map((l) =>
         '<a class="project-link" href="' + l.url + '" target="_blank" rel="noopener" data-cursor="link">' + l.label + '</a>').join('');
+      const shots = m.shots || [];
+      if (shots.length) card.classList.add('has-shots');
       card.innerHTML = '<div class="win-bar"><i></i><i></i><span></span></div>' +
         '<div class="win-body">' +
         (m.status ? '<span class="project-status st-' + m.status + '"><i class="st-dot"></i>' + t('status.' + m.status) + '</span>' : '') +
         '<h4 class="mod-name"></h4><p class="mod-desc"></p>' +
+        (shots.length ? '<div class="mod-shots"></div>' : '') +
         (links ? '<div class="project-links">' + links + '</div>' : '') + '</div>';
+      const shotsEl = card.querySelector('.mod-shots');
+      shots.forEach((s, i) => {
+        const fig = document.createElement('figure');
+        fig.className = 'mod-shot' + (s.wide ? ' is-wide' : '');
+        fig.innerHTML = '<button type="button" data-cursor="link"><img src="' + (s.thumb || s.src) + '" width="' + s.w + '" height="' + s.h +
+          '" loading="lazy" decoding="async" alt=""></button><figcaption></figcaption>';
+        fig.querySelector('img').alt = loc(s.caption);
+        fig.querySelector('figcaption').textContent = loc(s.caption);
+        fig.querySelector('button').addEventListener('click', () => openShots(shots, i));
+        shotsEl.appendChild(fig);
+      });
       card.querySelector('.win-bar span').textContent = m.id + '.mod';
       card.querySelector('.mod-name').textContent = loc(m.name);
       const desc = loc(m.desc);
@@ -777,6 +791,55 @@
       d.classList.toggle('is-soon', !desc);
       grid.appendChild(card);
     });
+  }
+
+  /* Просмотр скриншотов мода: крупно, стрелки ← →, Esc или щелчок по фону — закрыть */
+  let shotBox = null;
+  function openShots(list, start) {
+    if (!shotBox) {
+      shotBox = document.createElement('div');
+      shotBox.className = 'shot-box';
+      shotBox.setAttribute('role', 'dialog');
+      shotBox.setAttribute('aria-modal', 'true');
+      shotBox.innerHTML =
+        '<button type="button" class="shot-close" aria-label="×" data-cursor="link">×</button>' +
+        '<button type="button" class="shot-nav shot-prev" aria-label="←" data-cursor="link">‹</button>' +
+        '<figure><img alt=""><figcaption></figcaption><span class="shot-count"></span></figure>' +
+        '<button type="button" class="shot-nav shot-next" aria-label="→" data-cursor="link">›</button>';
+      document.body.appendChild(shotBox);
+      const step = (d) => { shotBox._i = (shotBox._i + d + shotBox._list.length) % shotBox._list.length; showShot(); };
+      shotBox.querySelector('.shot-prev').addEventListener('click', (e) => { e.stopPropagation(); step(-1); });
+      shotBox.querySelector('.shot-next').addEventListener('click', (e) => { e.stopPropagation(); step(1); });
+      shotBox.querySelector('.shot-close').addEventListener('click', closeShots);
+      shotBox.addEventListener('click', (e) => { if (e.target === shotBox) closeShots(); });
+      document.addEventListener('keydown', (e) => {
+        if (!shotBox.classList.contains('open')) return;
+        if (e.key === 'Escape') closeShots();
+        else if (e.key === 'ArrowLeft') step(-1);
+        else if (e.key === 'ArrowRight') step(1);
+      });
+    }
+    shotBox._list = list;
+    shotBox._i = start;
+    shotBox.classList.toggle('single', list.length < 2);
+    showShot();
+    shotBox.classList.add('open');
+    document.documentElement.classList.add('shot-lock');
+    shotBox.querySelector('.shot-close').focus({ preventScroll: true });
+  }
+  function showShot() {
+    const s = shotBox._list[shotBox._i];
+    const img = shotBox.querySelector('img');
+    img.src = s.src;
+    img.width = s.w;
+    img.height = s.h;
+    img.alt = loc(s.caption);
+    shotBox.querySelector('figcaption').textContent = loc(s.caption);
+    shotBox.querySelector('.shot-count').textContent = (shotBox._i + 1) + ' / ' + shotBox._list.length;
+  }
+  function closeShots() {
+    shotBox.classList.remove('open');
+    document.documentElement.classList.remove('shot-lock');
   }
 
   /* Кнопка на карточке проекта: перейти к плееру с плейлистом этого проекта */

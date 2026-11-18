@@ -727,6 +727,7 @@
   }
 
   /* ---------- Код и моды ---------- */
+  let modHashDone = false;   // прокрутка к #mod-… — только при первой отрисовке
   function renderCode() {
     const code = C.code || {};
     const feat = document.getElementById('codeFeatured');
@@ -761,6 +762,7 @@
     (code.mods || []).forEach((m) => {
       const card = document.createElement('article');
       card.className = 'win mod-card';
+      card.id = 'mod-' + m.id;   // прямая ссылка на мод: artpardsur.github.io/#mod-<id>
       card.setAttribute('data-anim', 'fade');
       const links = (m.links || []).map((l) =>
         '<a class="project-link" href="' + l.url + '" target="_blank" rel="noopener" data-cursor="link">' + l.label + '</a>').join('');
@@ -791,6 +793,12 @@
       d.classList.toggle('is-soon', !desc);
       grid.appendChild(card);
     });
+    // карточки рисуются скриптом, поэтому к якорю #mod-… браузер сам не прокрутит — один раз докручиваем
+    if (!modHashDone && /^#mod-/.test(location.hash)) {
+      modHashDone = true;
+      const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
+    }
   }
 
   /* Просмотр скриншотов мода: крупно, стрелки ← →, Esc или щелчок по фону — закрыть */

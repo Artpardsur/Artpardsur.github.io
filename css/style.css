@@ -2170,3 +2170,152 @@ html.shot-lock { overflow: hidden; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   html { scroll-behavior: auto; }
 }
+
+/* ============ Заставка «Разработка возобновлена» (js/premiere.js) ============ */
+.premiere {
+  position: fixed; inset: 0; z-index: 10000;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden auto;
+  background: #07040c;
+  opacity: 0; transition: opacity 0.9s ease;
+  --pm-gold: #f5c86a;
+}
+.premiere.is-on { opacity: 1; }
+.premiere.is-off { opacity: 0; transition: opacity 0.7s ease; }
+.premiere.is-off .pm-stage { transform: scale(0.97); filter: blur(4px); transition: transform 0.7s ease, filter 0.7s ease; }
+
+.pm-bg {
+  position: fixed; inset: -6%;
+  background: center / cover no-repeat;
+  filter: blur(18px) grayscale(1) brightness(0.45);
+  opacity: 0; transform: scale(1.12);
+  animation: pm-bg-in 3s 0.2s ease-out forwards, pm-drift 26s 0.2s ease-in-out infinite alternate;
+}
+.pm-vignette {
+  position: fixed; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 42%, rgba(245, 200, 106, 0.10), transparent 55%),
+    radial-gradient(ellipse at center, transparent 35%, rgba(7, 4, 12, 0.92) 100%);
+}
+.pm-dust { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; animation: pm-fade 2s 1.6s forwards; }
+
+.pm-close {
+  position: fixed; top: 18px; right: 22px; z-index: 2;
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18); background: rgba(7, 4, 12, 0.45);
+  color: #fff; font-size: 26px; line-height: 1; cursor: pointer;
+  opacity: 0; animation: pm-fade 0.6s 2.2s forwards;
+  transition: border-color 0.2s, background 0.2s;
+}
+.pm-close:hover { border-color: var(--pm-gold); background: rgba(245, 200, 106, 0.12); }
+
+.pm-stage {
+  position: relative; z-index: 1;
+  width: min(1080px, 92vw); margin: auto; padding: 40px 0 28px;
+  display: flex; flex-direction: column; align-items: center; gap: clamp(14px, 2.6vh, 30px);
+  text-align: center;
+}
+
+/* старый титульный экран — как кадр плёнки, который проявляется */
+.pm-frame {
+  position: relative; margin: 0; width: 100%;
+  max-width: calc(44vh * 16 / 9);
+  aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(245, 200, 106, 0.25), 0 0 60px rgba(245, 200, 106, 0.08);
+  clip-path: inset(0 50% 0 50% round 14px);
+  animation: pm-open 1.5s 0.5s cubic-bezier(0.7, 0, 0.2, 1) forwards, pm-glow 4s 4s ease-in-out infinite alternate;
+}
+.pm-img {
+  display: block; width: 100%; height: 100%; object-fit: cover;
+  filter: grayscale(1) brightness(0.25) contrast(1.2) blur(6px);
+  transform: scale(1.08);
+  animation: pm-develop 2.6s 0.7s ease-out forwards, pm-warm 2.2s 3s ease-in-out forwards, pm-zoom 30s 0.7s linear forwards;
+}
+/* золотой луч проходит по кадру — «время снова пошло» */
+.pm-sweep {
+  position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 220, 140, 0.55) 50%, transparent 62%);
+  transform: translateX(-110%);
+  animation: pm-sweep 1.8s 2.7s ease-in-out forwards;
+}
+/* круги от часов */
+.pm-rings { position: absolute; width: 0; height: 0; pointer-events: none; }
+.pm-rings i {
+  position: absolute; left: 0; top: 0;
+  width: 20vmin; height: 20vmin; margin: -10vmin 0 0 -10vmin; border-radius: 50%;
+  border: 2px solid rgba(255, 214, 120, 0.8);
+  box-shadow: 0 0 24px rgba(255, 200, 90, 0.6), inset 0 0 18px rgba(255, 200, 90, 0.35);
+  opacity: 0; transform: scale(0.3);
+  animation: pm-ring 2.4s ease-out forwards;
+}
+.pm-rings i:nth-child(1) { animation-delay: 3.1s; }
+.pm-rings i:nth-child(2) { animation-delay: 3.5s; }
+.pm-rings i:nth-child(3) { animation-delay: 3.9s; }
+
+.pm-copy { display: flex; flex-direction: column; align-items: center; gap: clamp(10px, 1.8vh, 18px); max-width: 760px; }
+.pm-kicker {
+  margin: 0; font-size: 12.5px; font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--pm-gold);
+  opacity: 0; animation: pm-up 0.9s 3.1s ease-out forwards;
+}
+.pm-kicker::before, .pm-kicker::after { content: ""; display: inline-block; width: 34px; height: 1px; margin: 0 14px; vertical-align: middle; background: currentColor; opacity: 0.6; }
+.pm-title {
+  margin: 0; font-family: var(--font-serif); font-weight: 600; color: #fff;
+  font-size: clamp(32px, min(4.4vw, 6.6vh), 60px); line-height: 1.05; letter-spacing: 0.005em;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+}
+.pm-word {
+  display: inline-block; opacity: 0; filter: blur(10px); transform: translateY(18px);
+  animation: pm-word 0.9s calc(3.35s + var(--i) * 0.14s) cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+.pm-gold {
+  background: linear-gradient(100deg, #f8d98a 0%, #ffb347 30%, #fff1c4 50%, #ffb347 70%, #f8d98a 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-shadow: none;
+  animation: pm-word 0.9s calc(3.35s + var(--i) * 0.14s) cubic-bezier(0.2, 0.7, 0.2, 1) forwards, pm-shine 5s 4.5s linear infinite;
+}
+.pm-text {
+  margin: 0; max-width: 720px; color: rgba(243, 239, 255, 0.82);
+  font-size: clamp(15px, 1.25vw, 17.5px); line-height: 1.6;
+  opacity: 0; animation: pm-up 1s 4s ease-out forwards;
+}
+.pm-actions {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 6px;
+  opacity: 0; animation: pm-up 0.9s 4.4s ease-out forwards;
+}
+.pm-go { background: linear-gradient(135deg, #ffd27a, #f0a93b); color: #1a1006; border-color: transparent; box-shadow: 0 10px 30px rgba(240, 169, 59, 0.3); }
+.pm-go:hover { box-shadow: 0 12px 40px rgba(240, 169, 59, 0.5); }
+.pm-more { border-color: rgba(245, 200, 106, 0.5); color: var(--pm-gold); }
+.pm-more:hover { border-color: var(--pm-gold); background: rgba(245, 200, 106, 0.08); }
+
+.project-card.pm-highlight { animation: pm-card 2.6s ease-out; }
+
+@keyframes pm-bg-in { to { opacity: 1; } }
+@keyframes pm-drift { from { transform: scale(1.12) translate(0, 0); } to { transform: scale(1.2) translate(-2%, -1%); } }
+@keyframes pm-fade { to { opacity: 1; } }
+@keyframes pm-open { to { clip-path: inset(0 0 0 0 round 14px); } }
+@keyframes pm-develop { to { filter: grayscale(1) brightness(1) contrast(1.05) blur(0); } }
+@keyframes pm-warm { from { filter: grayscale(1) brightness(1) contrast(1.05) blur(0); } to { filter: grayscale(0.35) sepia(0.28) saturate(1.25) brightness(1.04) contrast(1.05) blur(0); } }
+@keyframes pm-zoom { from { transform: scale(1.08); } to { transform: scale(1); } }
+@keyframes pm-sweep { to { transform: translateX(110%); } }
+@keyframes pm-ring { 0% { opacity: 0; transform: scale(0.3); } 15% { opacity: 1; } 100% { opacity: 0; transform: scale(2.6); } }
+@keyframes pm-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes pm-word { to { opacity: 1; filter: blur(0); transform: none; } }
+@keyframes pm-shine { from { background-position: 100% 0; } to { background-position: -150% 0; } }
+@keyframes pm-glow { to { box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(245, 200, 106, 0.45), 0 0 90px rgba(245, 200, 106, 0.22); } }
+@keyframes pm-card { 0%, 100% { box-shadow: none; } 20%, 60% { box-shadow: 0 0 0 2px #f5c86a, 0 0 40px rgba(245, 200, 106, 0.45); } }
+
+@media (max-width: 640px) {
+  .pm-stage { padding: 64px 0 28px; }
+  .pm-frame { max-width: 100%; }
+  .pm-frame { border-radius: 10px; }
+  .pm-kicker { letter-spacing: 0.22em; font-size: 11px; }
+  .pm-kicker::before, .pm-kicker::after { width: 18px; margin: 0 8px; }
+  .pm-actions { width: 100%; flex-direction: column; }
+  .pm-actions .btn { width: 100%; justify-content: center; }
+}
+
+.premiere.pm-reduce, .premiere.pm-reduce * { animation-duration: 0.01s !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: 0.01s !important; }
+.premiere.pm-reduce .pm-img { filter: grayscale(0.35) sepia(0.28) saturate(1.25); transform: none; }
+.premiere.pm-reduce .pm-sweep, .premiere.pm-reduce .pm-rings { display: none; }

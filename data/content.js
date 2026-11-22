@@ -405,6 +405,7 @@ window.CONTENT = {
     },
     {
       id: 'vremennoy-potok',
+      media: 'media/vremennoy-potok.jpg',
       name: { ru: 'Временной поток', en: 'Time Stream' },
       type: 'own',
       roles: ['dev', 'composer', 'sound'],
@@ -423,6 +424,22 @@ window.CONTENT = {
         ja: '自作ビジュアルノベル（2019–2021）。シナリオとコードの最初の一行から最後の音符まで、すべて一人で制作。ここから私のゲーム開発の道が始まった。',
       },
       links: [],
+      next: {
+        from: '2026-11-23T00:00:00+03:00',
+        status: 'wip',
+        updated: '2026-11',
+        desc: {
+          ru: 'Моя первая визуальная новелла (2019–2021), сделанная в одиночку: сценарий, код, музыка и звук. 23 ноября 2026 года разработка возобновлена — переношу игру на Ren’Py: новые фоны, ожившие сцены, выверенный сценарий, версии для ПК и Android.',
+          en: 'My first visual novel (2019–2021), made single-handedly: script, code, music and sound. On November 23, 2026 development resumed — I’m moving the game to Ren’Py: new backgrounds, living scenes, a polished script, PC and Android versions.',
+          es: 'Mi primera novela visual (2019–2021), hecha en solitario: guion, código, música y sonido. El 23 de noviembre de 2026 se reanudó el desarrollo: llevo el juego a Ren’Py con fondos nuevos, escenas vivas, un guion pulido y versiones para PC y Android.',
+          de: 'Meine erste Visual Novel (2019–2021), im Alleingang gemacht: Skript, Code, Musik und Sound. Am 23. November 2026 wurde die Entwicklung wieder aufgenommen – ich bringe das Spiel auf Ren’Py: neue Hintergründe, lebendige Szenen, ein überarbeitetes Skript, Versionen für PC und Android.',
+          fr: 'Mon premier visual novel (2019–2021), réalisé en solo : scénario, code, musique et son. Le 23 novembre 2026, le développement a repris — je porte le jeu sur Ren’Py : nouveaux décors, scènes vivantes, scénario retravaillé, versions PC et Android.',
+          it: 'La mia prima visual novel (2019–2021), realizzata da solo: sceneggiatura, codice, musica e suono. Il 23 novembre 2026 lo sviluppo è ripreso: porto il gioco su Ren’Py con nuovi sfondi, scene vive, una sceneggiatura rifinita e versioni per PC e Android.',
+          pt: 'Minha primeira visual novel (2019–2021), feita sozinho: roteiro, código, música e som. Em 23 de novembro de 2026 o desenvolvimento foi retomado — estou levando o jogo para Ren’Py: novos cenários, cenas vivas, roteiro revisado, versões para PC e Android.',
+          zh: '我的第一部视觉小说（2019–2021），独自完成剧本、代码、音乐与音效。2026年11月23日起恢复开发——正把游戏移植到 Ren’Py：全新背景、会动的场景、打磨过的剧本，以及 PC 与 Android 版本。',
+          ja: '初めてのビジュアルノベル（2019–2021）。シナリオ、コード、音楽、サウンドをすべて一人で制作。2026年11月23日に開発を再開——Ren’Py へ移植中：新しい背景、動くシーン、磨き直したシナリオ、PC版とAndroid版。',
+        },
+      },
     },
     {
       id: 'hertz',
@@ -755,13 +772,45 @@ window.CONTENT = {
 
   /* ---------------- АНОНС: отсчёт на главной. date — момент анонса с часовым поясом,
      latest — последняя публикация на itch.io (null — не показывать) ---------------- */
-  announce: { project: 'vremennoy-potok', date: '2026-11-23T00:00:00+03:00', url: 'https://creator4444.itch.io/', latest: null },
+  announce: {
+    project: 'vremennoy-potok',
+    date: '2026-11-23T00:00:00+03:00',
+    url: 'https://creator4444.itch.io/',
+    latest: null,
+    premiere: {
+      until: '2026-11-24T00:00:00+03:00',
+      img: 'media/vremennoy-potok.jpg',
+      blur: 'media/vremennoy-potok-blur.jpg',
+      clock: [0.684, 0.482],
+      kicker: { ru: '23 ноября 2026', en: 'November 23, 2026', es: '23 de noviembre de 2026', de: '23. November 2026', fr: '23 novembre 2026', it: '23 novembre 2026', pt: '23 de novembro de 2026', zh: '2026年11月23日', ja: '2026年11月23日' },
+      title: { ru: 'Разработка «Временного потока» возобновлена', en: 'Development of Time Stream has resumed', es: 'Se reanuda el desarrollo de Time Stream', de: 'Die Entwicklung von Time Stream geht weiter', fr: 'Le développement de Time Stream reprend', it: 'Riprende lo sviluppo di Time Stream', pt: 'O desenvolvimento de Time Stream foi retomado', zh: '《Time Stream》恢复开发', ja: '『Time Stream』開発再開' },
+      accent: { ru: 'Временного потока', en: 'Time Stream', es: 'Time Stream', de: 'Time Stream', fr: 'Time Stream', it: 'Time Stream', pt: 'Time Stream', zh: 'Time Stream', ja: 'Time Stream' },
+      text: {
+        ru: 'Пять лет спустя я возвращаюсь к своей первой визуальной новелле — той, с которой начался мой путь в геймдеве. Лето, родной двор, опустевшие улицы и время, которое пошло не так. Сейчас переношу игру на Ren’Py: новые фоны, ожившие сцены, выверенный сценарий, версии для ПК и Android.',
+        en: 'Five years later, I’m returning to my first visual novel — the one where my game dev journey began. Summer, a familiar courtyard, empty streets and time that went wrong. I’m now moving the game to Ren’Py: new backgrounds, living scenes, a polished script, PC and Android versions.',
+        es: 'Cinco años después vuelvo a mi primera novela visual, con la que empezó mi camino en el desarrollo de juegos. Verano, el patio de siempre, calles vacías y un tiempo que se torció. Ahora llevo el juego a Ren’Py: fondos nuevos, escenas vivas, un guion pulido y versiones para PC y Android.',
+        de: 'Fünf Jahre später kehre ich zu meiner ersten Visual Novel zurück – der, mit der mein Weg im Game Dev begann. Sommer, der vertraute Hof, leere Straßen und eine Zeit, die aus den Fugen geraten ist. Jetzt bringe ich das Spiel auf Ren’Py: neue Hintergründe, lebendige Szenen, ein überarbeitetes Skript, Versionen für PC und Android.',
+        fr: 'Cinq ans plus tard, je reviens à mon premier visual novel — celui par lequel tout a commencé. L’été, la cour familière, des rues désertes et un temps qui a déraillé. Je porte maintenant le jeu sur Ren’Py : nouveaux décors, scènes vivantes, scénario retravaillé, versions PC et Android.',
+        it: 'Cinque anni dopo torno alla mia prima visual novel, quella da cui è iniziato il mio percorso nel game dev. L’estate, il cortile di casa, strade deserte e un tempo che è andato storto. Ora porto il gioco su Ren’Py: nuovi sfondi, scene vive, una sceneggiatura rifinita e versioni per PC e Android.',
+        pt: 'Cinco anos depois, volto à minha primeira visual novel — aquela com que começou minha jornada no game dev. Verão, o pátio de sempre, ruas vazias e um tempo que saiu dos trilhos. Agora estou levando o jogo para Ren’Py: novos cenários, cenas vivas, roteiro revisado, versões para PC e Android.',
+        zh: '五年后，我回到了自己的第一部视觉小说——我的游戏开发之路正是从它开始的。夏天、熟悉的院子、空无一人的街道，以及出了差错的时间。现在我正把它移植到 Ren’Py：全新背景、会动的场景、打磨过的剧本，以及 PC 与 Android 版本。',
+        ja: '5年の時を経て、ゲーム開発の道の始まりとなった初めてのビジュアルノベルに戻ってきました。夏、見慣れた中庭、人のいない街、そして狂ってしまった時間。現在 Ren’Py へ移植中：新しい背景、動くシーン、磨き直したシナリオ、PC版とAndroid版。',
+      },
+      cta: { ru: 'Смотреть портфолио', en: 'Explore the portfolio', es: 'Ver el portafolio', de: 'Zum Portfolio', fr: 'Voir le portfolio', it: 'Vedi il portfolio', pt: 'Ver o portfólio', zh: '浏览作品集', ja: 'ポートフォリオを見る' },
+      more: { ru: 'О проекте', en: 'About the project', es: 'Sobre el proyecto', de: 'Über das Projekt', fr: 'À propos du projet', it: 'Il progetto', pt: 'Sobre o projeto', zh: '关于项目', ja: 'プロジェクトについて' },
+      now: { ru: 'Вернулся к «Временному потоку»: переношу игру на Ren’Py. И пишу музыку к «Полли и городу снов», «Проклятому удачей» и «Иди через лес», делаю моды.', en: 'Back to “Time Stream”: moving the game to Ren’Py. Also writing music for “Polly and the City of Dreams”, “Luck Cursed” and “Walk Through the Forest”, making mods.' },
+    },
+  },
 
   /* ---------------- СТАТУС: строка «чем занят сейчас» (пусто — блок скрыт) ---------------- */
   now: { ru: 'Пишу музыку к «Полли и городу снов», «Проклятому удачей» и «Иди через лес», делаю моды — и готовлю анонс «Временного потока».', en: 'Writing music for “Polly and the City of Dreams”, “Luck Cursed” and “Walk Through the Forest”, making mods — and preparing the “Time Stream” announcement.' },
 
   /* ---------------- ОБНОВЛЕНИЯ САЙТА: последние сверху, показываются первые 4 ---------------- */
   updates: [
+    {
+      date: '2026-11-23',
+      text: { ru: 'Разработка «Временного потока» возобновлена: игра переезжает на Ren’Py', en: 'Development of Time Stream has resumed: the game is moving to Ren’Py' },
+    },
     {
       date: '2026-11-18',
       text: { ru: 'Мод Ellilverse для RimWorld: яйца в скорлупе, уши, второе сердце, совместимость со слингом, ссылки на Paraselene', en: 'Ellilverse RimWorld mod: eggs in shells, ears, the second heart, sling compatibility, links to Paraselene' },

@@ -3,6 +3,31 @@
    контакты и таймлайн. Саунд-дизайн — в sound.js. */
 (function () {
   const C = window.CONTENT;
+
+  /* Отложенные правки: project.next = { from, ...поля } применяется с момента from
+     (статус и описание меняются ровно после анонса), announce.premiere.now — новая строка статуса */
+  function applyScheduled() {
+    const now = Date.now();
+    let changed = false;
+    (C.projects || []).forEach((p) => {
+      const n = p.next;
+      if (!n || !n.from || now < new Date(n.from).getTime()) return;
+      Object.keys(n).forEach((k) => { if (k !== 'from') p[k] = n[k]; });
+      delete p.next;
+      changed = true;
+    });
+    const a = C.announce;
+    if (a && a.date && a.premiere && a.premiere.now && !a.premiere.nowDone && now >= new Date(a.date).getTime()) {
+      C.now = a.premiere.now;
+      a.premiere.nowDone = true;
+      changed = true;
+    }
+    return changed;
+  }
+  applyScheduled();
+
+  // сегодняшняя дата по Москве: записи «Обновлений» из будущего не показываются раньше времени
+  function todayMsk() { return new Date(Date.now() + 3 * 36e5).toISOString().slice(0, 10); }
   const I = window.I18N;
 
   /* Цвета кружков в окнах выбора — чтобы жанры и настроения различались глазом */
@@ -538,8 +563,13 @@
     const tick = () => {
       const left = target - Date.now();
       if (left <= 0) {
+        const wasOut = announceEl.classList.contains('is-out');
         announceEl.classList.add('is-out');
-        link.textContent = t('announce.done');
+        link.textContent = t('announce.follow');
+        if (a.premiere && a.premiere.title) document.getElementById('announceWhen').textContent = loc(a.premiere.title);
+        // отсчёт закончился у открытой страницы — статус, описание и строка «сейчас» меняются сразу
+        if (!wasOut && applyScheduled()) { renderDesk(); renderProjects(); }
+        if (window.Premiere) window.Premiere.maybeShow();
         ['d', 'h', 'm', 's'].forEach((u) => { nums[u].textContent = u === 'd' ? '0' : '00'; });
         return;
       }
@@ -576,7 +606,8 @@
 
     const ul = document.getElementById('updatesList');
     ul.innerHTML = '';
-    (C.updates || []).slice(0, 4).forEach((u) => {
+    const today = todayMsk();
+    (C.updates || []).filter((u) => !u.date || u.date <= today).slice(0, 4).forEach((u) => {
       const li = document.createElement('li');
       li.innerHTML = '<span class="upd-date"></span><span class="upd-text"></span>';
       li.firstChild.textContent = shortDate(u.date);
@@ -667,6 +698,7 @@
     list.forEach((p, i) => {
       const card = document.createElement('article');
       card.className = 'project-card' + (animate ? ' card-in' : '');
+      card.id = 'project-' + p.id;
       card.style.animationDelay = Math.min(i * 0.04, 0.5) + 's';
       const roles = p.roles.map((r) => '<span class="project-role">' + t('role.' + r) + '</span>').join('');
       const links = (p.links || []).map((l) =>

@@ -476,7 +476,7 @@ window.CONTENT = {
     {
       id: 'cursed-luck',
       media: 'media/cursed-luck.jpg',
-      name: { ru: 'Проклятый удачей', en: 'Cursed by Luck', es: 'Maldito por la suerte', de: 'Vom Glück verflucht', fr: 'Maudit par la chance', it: 'Maledetto dalla fortuna', pt: 'Amaldiçoado pela sorte', zh: '被幸运诅咒', ja: '幸運に呪われし者' },
+      name: { ru: 'Проклятый удачей', en: 'Luck Cursed', es: 'Luck Cursed', de: 'Luck Cursed', fr: 'Luck Cursed', it: 'Luck Cursed', pt: 'Luck Cursed', zh: 'Luck Cursed', ja: 'Luck Cursed' },
       type: 'vn',
       roles: ['composer'],
       status: 'wip',
@@ -758,7 +758,7 @@ window.CONTENT = {
   announce: { project: 'vremennoy-potok', date: '2026-11-23T00:00:00+03:00', url: 'https://creator4444.itch.io/', latest: null },
 
   /* ---------------- СТАТУС: строка «чем занят сейчас» (пусто — блок скрыт) ---------------- */
-  now: { ru: 'Пишу музыку к «Полли и городу снов», «Проклятому удачей» и «Иди через лес», делаю моды — и готовлю анонс «Временного потока».', en: 'Writing music for “Polly and the City of Dreams”, “Cursed by Luck” and “Walk Through the Forest”, making mods — and preparing the “Time Stream” announcement.' },
+  now: { ru: 'Пишу музыку к «Полли и городу снов», «Проклятому удачей» и «Иди через лес», делаю моды — и готовлю анонс «Временного потока».', en: 'Writing music for “Polly and the City of Dreams”, “Luck Cursed” and “Walk Through the Forest”, making mods — and preparing the “Time Stream” announcement.' },
 
   /* ---------------- ОБНОВЛЕНИЯ САЙТА: последние сверху, показываются первые 4 ---------------- */
   updates: [
@@ -776,7 +776,7 @@ window.CONTENT = {
     },
     {
       date: '2026-10-23',
-      text: { ru: 'Новые проекты: «Частота 17 Герц», ВГИК-Дебют, «Проклятый удачей», «Иди через лес»', en: 'New projects: Frequency 17 Hz, VGIK-Debut, Cursed by Luck, Walk Through the Forest' },
+      text: { ru: 'Новые проекты: «Частота 17 Герц», ВГИК-Дебют, «Проклятый удачей», «Иди через лес»', en: 'New projects: Frequency 17 Hz, VGIK-Debut, Luck Cursed, Walk Through the Forest' },
     },
     {
       date: '2026-10-23',

@@ -35,7 +35,20 @@
   function maybeShow() {
     if (shown) return;
     if (!forced() && (!isLive(Date.now()) || seen())) return;
-    show();
+    shown = true;
+    afterPreloader(show);
+  }
+
+  // заставка — после прелоадера, иначе она сразу накрывает загрузку
+  function afterPreloader(fn) {
+    const pre = document.getElementById('preloader');
+    if (!pre || pre.classList.contains('done')) { fn(); return; }
+    const mo = new MutationObserver(() => {
+      if (!pre.classList.contains('done')) return;
+      mo.disconnect();
+      setTimeout(fn, 250);
+    });
+    mo.observe(pre, { attributes: true, attributeFilter: ['class'] });
   }
 
   function show() {
